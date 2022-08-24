@@ -31,7 +31,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
-          file: Dockerfile-${{ inputs.image_variant }}
+          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_variant }}
           push: true
           tags: ${{ secrets.EWZ_DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_variant }}-latest
 
