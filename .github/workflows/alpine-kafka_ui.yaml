@@ -1,5 +1,18 @@
 name: Publish kafka-ui:alpine
-
+on:
+  workflow_dispatch:
+    inputs:
+      image_name:
+       description: 'Docker image name'
+       required: false
+       default: 'kafka-ui'
+      image_variant:
+        description: 'Docker image variant'
+        required: true
+        default: 'alpine'
+        type: choice
+        options:
+          - alpine
 jobs:
   push_to_registries:
     name: Push Docker image to multiple Docker Hub
@@ -17,8 +30,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: kafka-ui
-          file: Dockerfile-alpine
+          context: ${{ inputs.image_name }}
+          file: Dockerfile-${{ inputs.image_variant }}
           push: true
-          tags: ewze/kafka-ui:alpine-latest
+          tags: ${{ secrets.EWZ_DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_variant }}-latest
 
