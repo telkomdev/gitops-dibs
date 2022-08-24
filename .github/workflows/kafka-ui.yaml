@@ -9,9 +9,10 @@ on:
       image_variant:
         description: 'Docker image variant'
         required: true
-        default: 'alpine'
+        default: 'all'
         type: choice
         options:
+          - all
           - alpine
           - debian
 jobs:
@@ -28,7 +29,8 @@ jobs:
         with:
           username: ${{ secrets.EWZ_DOCKER_USERNAME }}
           password: ${{ secrets.EWZ_DOCKER_PASSWORD }}
-      - name: Build and push
+      - if ${{ inputs.image_variant }} != "all"
+        name: Build and push - ${{ inputs.image_variant }}
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
