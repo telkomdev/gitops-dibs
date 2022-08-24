@@ -1,4 +1,4 @@
-name: Publish kafka-ui:alpine
+name: Publish kafka-ui
 on:
   workflow_dispatch:
     inputs:
@@ -30,7 +30,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: ${{ inputs.image_name }}
+          context: {{defaultContext}}:${{ inputs.image_name }}
           file: Dockerfile-${{ inputs.image_variant }}
           push: true
           tags: ${{ secrets.EWZ_DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_variant }}-latest
