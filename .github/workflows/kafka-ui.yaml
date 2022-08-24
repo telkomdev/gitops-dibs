@@ -50,7 +50,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
-          file: ${{ inputs.image_name }}/Dockerfile-alpine debian
+          file: ${{ inputs.image_name }}/Dockerfile-debian
           push: true
           tags: ${{ secrets.EWZ_DOCKER_USERNAME }}/${{ inputs.image_name }}:debian-latest
 
