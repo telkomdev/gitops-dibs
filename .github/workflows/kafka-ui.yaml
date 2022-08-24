@@ -37,4 +37,20 @@ jobs:
           file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_variant }}
           push: true
           tags: ${{ secrets.EWZ_DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_variant }}-latest
+      - if: ${{ inputs.image_variant }} == "all"
+        name: Build and push - alpine
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.image_name }}
+          file: ${{ inputs.image_name }}/Dockerfile-alpine
+          push: true
+          tags: ${{ secrets.EWZ_DOCKER_USERNAME }}/${{ inputs.image_name }}:alpine-latest
+      - if: ${{ inputs.image_variant }} == "all"
+        name: Build and push - debian
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.image_name }}
+          file: ${{ inputs.image_name }}/Dockerfile-alpine debian
+          push: true
+          tags: ${{ secrets.EWZ_DOCKER_USERNAME }}/${{ inputs.image_name }}:debian-latest
 
