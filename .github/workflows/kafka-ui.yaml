@@ -27,8 +27,8 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.EWZ_DOCKER_USERNAME }}
-          password: ${{ secrets.EWZ_DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       - if: "${{ inputs.image_variant != 'all' }}"
         name: Build and push - ${{ inputs.image_variant }}
         uses: docker/build-push-action@v3
@@ -36,7 +36,7 @@ jobs:
           context: ${{ inputs.image_name }}
           file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_variant }}
           push: true
-          tags: ${{ secrets.EWZ_DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_variant }}-latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_variant }}-latest
       - if: "${{ inputs.image_variant == 'all' }}"
         name: Build and push - alpine
         uses: docker/build-push-action@v3
@@ -44,7 +44,7 @@ jobs:
           context: ${{ inputs.image_name }}
           file: ${{ inputs.image_name }}/Dockerfile-alpine
           push: true
-          tags: ${{ secrets.EWZ_DOCKER_USERNAME }}/${{ inputs.image_name }}:alpine-latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:alpine-latest
       - if: "${{ inputs.image_variant == 'all' }}"
         name: Build and push - debian
         uses: docker/build-push-action@v3
@@ -52,5 +52,5 @@ jobs:
           context: ${{ inputs.image_name }}
           file: ${{ inputs.image_name }}/Dockerfile-debian
           push: true
-          tags: ${{ secrets.EWZ_DOCKER_USERNAME }}/${{ inputs.image_name }}:debian-latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:debian-latest
 
