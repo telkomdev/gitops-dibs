@@ -25,7 +25,7 @@ WORKDIR /usr/src/app
 
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends curl openjdk-11-jre \
-    && curl -Lo kafka-ui-api.jar "https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-api-${KAFKA_UI_VERSION}.jar" \
+    && curl -Lo kafka-ui-api.jar "https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-api-v${KAFKA_UI_VERSION}.jar" \
     && apt-get remove -y --purge curl \
     && apt-get autoremove -y --purge \
     && apt-get clean -y \
