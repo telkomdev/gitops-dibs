@@ -4,7 +4,7 @@ on:
     inputs:
       image_name:
        description: 'Docker image name'
-       required: false
+       required: true
        default: 'kafka-ui'
       image_variant:
         description: 'Docker image variant'
