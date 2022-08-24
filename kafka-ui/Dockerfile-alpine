@@ -27,7 +27,7 @@ RUN apk update \
     && apk add --no-cache curl openjdk13-jre \
     && curl -Lo kafka-ui-api.jar "https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-api-${KAFKA_UI_VERSION}.jar" \
     && apk del --purge curl \
-    rm -rf /var/cache/apk/*
+    && rm -rf /var/cache/apk/*
 
 USER nobody:nobody
 
