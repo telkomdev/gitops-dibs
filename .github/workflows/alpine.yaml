@@ -12,6 +12,14 @@ on:
         default: 3.16
         options:
           - 3.16
+      image_variant:
+        description: Docker image variant
+        required: true
+        default: base
+        type: choice
+        options:
+          - base
+          - oci
 jobs:
   push_to_registries:
     name: Push Docker image to Docker Hub
@@ -26,11 +34,20 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: "Build and push - ${{ inputs.image_name }}:${{ inputs.image_version }}"
+      - if: ${{ inputs.image_variant == 'base' }}
+        name: "Build and push - ${{ inputs.image_name }}:${{ inputs.image_version }}"
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
           file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}
+      - if: ${{ inputs.image_variant != 'base' }}
+        name: "Build and push - ${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}"
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.image_name }}
+          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_${{ inputs.image_variant }}
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}
 
