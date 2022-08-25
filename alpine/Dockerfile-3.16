@@ -1,6 +1,6 @@
 FROM alpine:3.16
 
-LABEL org.opencontainers.image.authors="Lutfa Ibtihaji Ilham <lutfailham96@gmail.com>"
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
 LABEL io.k8s.description="Alpine (3.16)"
 LABEL io.k8s.display-name="Alpine (3.16)"
 LABEL io.openshift.non-scalable="false"
@@ -16,7 +16,7 @@ ENV LANG="C.UTF-8" \
 WORKDIR /usr/src/app
 
 RUN apk add --no-cache tzdata \
-    && rm -rf /var/cache/apk/*
+      && rm -rf /var/cache/apk/*
 
 USER nobody:nobody
 
