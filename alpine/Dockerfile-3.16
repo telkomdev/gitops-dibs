@@ -15,8 +15,7 @@ ENV LANG="C.UTF-8" \
 
 WORKDIR /usr/src/app
 
-RUN apk update \
-    && apk add --no-cache tzdata \
+RUN apk add --no-cache tzdata \
     && rm -rf /var/cache/apk/*
 
 USER nobody:nobody

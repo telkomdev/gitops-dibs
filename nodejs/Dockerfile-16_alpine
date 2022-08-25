@@ -60,6 +60,9 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar \
     && apk del .build-deps-yarn \
     && yarn --version
 
+RUN apk add --no-cache tzdata \
+    && rm -rf /var/cache/apk/*
+
 COPY docker-entrypoint.sh /usr/local/bin
 
 ENTRYPOINT ["docker-entrypoint.sh"]

@@ -23,10 +23,13 @@ ENV KAFKA_UI_VERSION=0.4.0
 
 WORKDIR /usr/src/app
 
-RUN apk update \
-    && apk add --no-cache curl openjdk13-jre \
+RUN apk add --no-cache tzdata
+
+RUN apk add --no-cache curl openjdk13-jre \
     && curl -Lo kafka-ui-api.jar "https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-api-v${KAFKA_UI_VERSION}.jar" \
-    && apk del --purge curl \
+    && apk del --purge curl
+
+RUN apk add --no-cache tzdata \
     && rm -rf /var/cache/apk/*
 
 USER nobody:nobody
