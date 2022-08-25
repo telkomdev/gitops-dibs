@@ -33,6 +33,7 @@ RUN wget "https://download.oracle.com/otn_software/linux/instantclient/217000/in
         && rm -rf instantclient.zip \
         && mkdir -p /opt/oracle/instantclient \
         && mv instantclient_*/* /opt/oracle/instantclient/ \
+        && rm -rf instantclient_* \
         && echo "/opt/oracle/instantclient" > /etc/ld.so.conf.d/oracle-instantclient.conf \
         && ldconfig
 
