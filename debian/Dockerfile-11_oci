@@ -26,6 +26,7 @@ RUN apt-get update -y \
         gcc \
         libaio1 \
         ca-certificates \
+        unzip \
         wget
 
 # Install instantclient
@@ -39,7 +40,7 @@ RUN wget "https://download.oracle.com/otn_software/linux/instantclient/217000/in
         && ldconfig
 
 # Cleanup
-RUN apt-get remove --purge wget \
+RUN apt-get remove --purge wget unzip \
      && apt-get autoremove --purge \
      && apt-get autoclean -y \
      && apt-get clean -y \
