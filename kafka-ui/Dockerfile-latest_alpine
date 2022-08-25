@@ -1,8 +1,8 @@
 FROM alpine:3.16
 
-LABEL org.opencontainers.image.authors="Lutfa Ibtihaji Ilham <lutfailham96@gmail.com>"
-LABEL io.k8s.description="Alpine (3.x) Kafka-UI"
-LABEL io.k8s.display-name="Alpine (3.x) Kafka-UI"
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
+LABEL io.k8s.description="Alpine (3.16) Kafka-UI"
+LABEL io.k8s.display-name="Alpine (3.16) Kafka-UI"
 LABEL io.openshift.non-scalable="false"
 LABEL io.openshift.tags="runner,alpine,kafka"
 LABEL summary="Virtual Machine (VM) like container platform with Kafka-UI"
@@ -19,18 +19,18 @@ ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
     TZ="Asia/Jakarta"
 
-ENV KAFKA_UI_VERSION=0.4.0
+ENV KAFKA_UI_VERSION="0.4.0"
 
 WORKDIR /usr/src/app
 
 RUN apk add --no-cache tzdata
 
 RUN apk add --no-cache curl openjdk13-jre \
-    && curl -Lo kafka-ui-api.jar "https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-api-v${KAFKA_UI_VERSION}.jar" \
-    && apk del --purge curl
+      && curl -Lo kafka-ui-api.jar "https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-api-v${KAFKA_UI_VERSION}.jar" \
+      && apk del --purge curl
 
 RUN apk add --no-cache tzdata \
-    && rm -rf /var/cache/apk/*
+      && rm -rf /var/cache/apk/*
 
 USER nobody:nobody
 
