@@ -1,0 +1,19 @@
+FROM alpine:3.16
+
+LABEL org.opencontainers.image.authors="Lutfa Ibtihaji Ilham <lutfailham96@gmail.com>"
+LABEL io.k8s.description="Alpine (3.16)"
+LABEL io.k8s.display-name="Alpine (3.16)"
+LABEL io.openshift.non-scalable="false"
+LABEL io.openshift.tags="runner,alpine"
+LABEL summary="Virtual Machine (VM) like container platform"
+LABEL vendor="Alpine"
+LABEL release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta"
+
+WORKDIR /usr/src/app
+
+USER nobody:nobody
+
