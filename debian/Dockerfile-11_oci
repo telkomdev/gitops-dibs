@@ -22,8 +22,6 @@ WORKDIR /usr/src/app
 # Prerequisites
 RUN apt-get update -y \
       && apt-get install -y --no-install-recommends \
-        build-essential \
-        gcc \
         libaio1 \
         ca-certificates \
         unzip \
