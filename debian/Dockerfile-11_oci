@@ -1,0 +1,47 @@
+FROM debian:11
+
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
+LABEL io.k8s.description="Debian (11) OCI"
+LABEL io.k8s.display-name="Debian (11) OCI"
+LABEL io.openshift.non-scalable="false"
+LABEL io.openshift.tags="runner,debian,oracle"
+LABEL summary="Virtual Machine (VM) like container platform with Oracle Instant Client"
+LABEL vendor="Debian"
+LABEL release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta" \
+    DEBIAN_FRONTEND="noninteractive"
+
+ENV INSTANT_CLIENT_VERSION="21.7.0" \
+    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}"
+
+WORKDIR /usr/src/app
+
+# Prerequisites
+RUN apt-get update -y \
+      && apt-get install -y --no-install-recommends \
+        build-essential \
+        gcc \
+        libaio1 \
+        wget
+
+# Install instantclient
+RUN wget "https://download.oracle.com/otn_software/linux/instantclient/217000/instantclient-basic-linux.x64-21.7.0.0.0dbru.zip" -O instantclient.zip \
+        && unzip instantclient.zip \
+        && rm -rf instantclient.zip \
+        && mkdir -p /opt/oracle/instantclient \
+        && mv instantclient_*/* /opt/oracle/instantclient/ \
+        && echo "/opt/oracle/instantclient" > /etc/ld.so.conf.d/oracle-instantclient.conf \
+        && ldconfig
+
+# Cleanup
+RUN apt-get remove --purge wget \
+     && apt-get autoremove --purge \
+     && apt-get autoclean -y \
+     && apt-get clean -y \
+     && rm -rf rm -rf /var/lib/apt/lists/*
+
+USER nobody:nobody
+
