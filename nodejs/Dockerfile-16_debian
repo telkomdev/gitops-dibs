@@ -118,10 +118,10 @@ RUN savedAptMark="$(apt-mark showmanual)"; \
 RUN apt-get install -y --no-install-recommends tzdata
 
 # Cleanup
-RUN apt-get clean -y \
-    && apt-get autoclean -y \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /var/cache/apt/*
+RUN apt-get clean -y; \
+    apt-get autoclean -y; \
+    rm -rf /var/lib/apt/lists/*; \
+    rm -rf /var/cache/apt/*
 
 COPY docker-entrypoint.sh /usr/local/bin
 
