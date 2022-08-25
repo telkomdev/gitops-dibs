@@ -40,8 +40,8 @@ RUN wget "https://download.oracle.com/otn_software/linux/instantclient/217000/in
         && ldconfig
 
 # Cleanup
-RUN apt-get remove --purge wget unzip \
-     && apt-get autoremove --purge \
+RUN apt-get remove -y --purge wget unzip \
+     && apt-get autoremove -y --purge \
      && apt-get autoclean -y \
      && apt-get clean -y \
      && rm -rf rm -rf /var/lib/apt/lists/*
