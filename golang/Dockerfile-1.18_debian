@@ -1,10 +1,10 @@
 FROM debian:11
 
-LABEL org.opencontainers.image.authors="Lutfa Ibtihaji Ilham <lutfailham96@gmail.com>"
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
 LABEL io.k8s.description="Debian (11)"
 LABEL io.k8s.display-name="Debian (11)"
 LABEL io.openshift.non-scalable="false"
-LABEL io.openshift.tags="runner,debian,golang"
+LABEL io.openshift.tags="builder,debian,golang"
 LABEL summary="Virtual Machine (VM) like container platform with Golang 1.18"
 LABEL vendor="Debian"
 LABEL release="1"
@@ -22,11 +22,11 @@ WORKDIR /usr/src/app
 
 # Install prerequisites
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-      ca-certificates \
-      curl \
-      netbase \
-      wget
+      && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        netbase \
+        wget
 RUN if ! command -v gpg > /dev/null; then \
       apt-get update \
         && apt-get install -y --no-install-recommends \
@@ -126,9 +126,10 @@ RUN arch="$(dpkg --print-architecture)"; \
           "${GOCACHE}"; \
     fi; \
     go version
+
 # Configure golang
 RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
-    && chmod -R 777 "${GOPATH}"
+      && chmod -R 777 "${GOPATH}"
 
 # Install TZ
 RUN apt-get install -y --no-install-recommends tzdata
@@ -137,3 +138,4 @@ RUN apt-get install -y --no-install-recommends tzdata
 RUN apt-get clean -y \
     && apt-get autoclean -y \
     && rm -rf /var/cache/apt/*
+
