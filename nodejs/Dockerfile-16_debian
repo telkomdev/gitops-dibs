@@ -47,6 +47,7 @@ RUN ARCH=; \
         ;; \
     esac; \
     set -ex; \
+    apt-get update; \
     apt-get install -y --no-install-recommends \
       ca-certificates \
       curl \
