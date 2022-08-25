@@ -25,6 +25,7 @@ RUN apt-get update -y \
         build-essential \
         gcc \
         libaio1 \
+        ca-certificates \
         wget
 
 # Install instantclient
