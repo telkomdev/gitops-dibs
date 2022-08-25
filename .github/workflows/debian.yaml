@@ -16,6 +16,7 @@ on:
         description: Docker image variant
         required: true
         default: base
+        type: choice
         options:
           - base
           - oci
