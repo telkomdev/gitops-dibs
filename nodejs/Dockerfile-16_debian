@@ -19,68 +19,6 @@ ENV NODE_VERSION="16.17.0" \
 
 WORKDIR /usr/src/app
 
-# Prerequisites
-RUN apt-get update; \
-    apt-get install -y --no-install-recommends \
-      ca-certificates \
-      curl \
-      netbase \
-      wget
-RUN if ! command -v gpg > /dev/null; then \
-      apt-get install -y --no-install-recommends \
-        gnupg \
-        dirmngr; \
-    fi
-RUN apt-get install -y --no-install-recommends \
-      git \
-      mercurial \
-      openssh-client \
-      subversion \
-      procps
-RUN apt-get update; \
-    apt-get install -y --no-install-recommends \
-      autoconf \
-      automake \
-      bzip2 \
-      dpkg-dev \
-      file \
-      g++ \
-      gcc \
-      imagemagick \
-      libbz2-dev \
-      libc6-dev \
-      libcurl4-openssl-dev \
-      libdb-dev \
-      libevent-dev \
-      libffi-dev \
-      libgdbm-dev \
-      libglib2.0-dev \
-      libgmp-dev \
-      libjpeg-dev \
-      libkrb5-dev \
-      liblzma-dev \
-      libmagickcore-dev \
-      libmagickwand-dev \
-      libmaxminddb-dev \
-      libncurses5-dev \
-      libncursesw5-dev \
-      libpng-dev \
-      libpq-dev \
-      libreadline-dev \
-      libsqlite3-dev \
-      libssl-dev \
-      libtool \
-      libwebp-dev \
-      libxml2-dev \
-      libxslt-dev \
-      libyaml-dev \
-      make \
-      patch \
-      unzip \
-      xz-utils \
-      zlib1g-dev \
-      $(if apt-cache show 'default-libmysqlclient-dev' 2>/dev/null | grep -q '^Version:'; then echo 'default-libmysqlclient-dev'; else echo 'libmysqlclient-dev'; fi)
-
 # Install Node.js
 RUN ARCH=; \
     dpkgArch="$(dpkg --print-architecture)"; \
@@ -109,6 +47,15 @@ RUN ARCH=; \
         ;; \
     esac; \
     set -ex; \
+    apt-get install -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      wget \
+      gnupg \
+      dirmngr \
+      xz-utils \
+      libatomic1; \
+    && rm -rf /var/lib/apt/lists/*     \
     for key in \
       4ED778F539E3634C779C87C6D7062848A1AB005C \
       141F07595B7B3FFE74309A937405533BE57C7D57 \
@@ -133,12 +80,22 @@ RUN ARCH=; \
     grep " node-v${NODE_VERSION}-linux-${ARCH}.tar.xz\$" SHASUMS256.txt | sha256sum -c -; \
     tar -xJf "node-v${NODE_VERSION}-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner; \
     rm "node-v${NODE_VERSION}-linux-${ARCH}.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+    apt-mark auto '.*' > /dev/null; \
+    find /usr/local -type f -executable -exec ldd '{}' ';' | awk '/=>/ { print $(NF-1) }' | sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual; \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
     node --version; \
     npm --version
 
 # Install Yarn
-RUN for key in \
+RUN savedAptMark="$(apt-mark showmanual)"; \
+    apt-get install -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      wget \
+      gnupg \
+      dirmngr; \
+    for key in \
       6A010C5166006599AA17F08146C2130DFD2497F5; \
     do \
       gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "${key}" || gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${key}"; \
@@ -151,6 +108,10 @@ RUN for key in \
     ln -s /opt/yarn-v${YARN_VERSION}/bin/yarn /usr/local/bin/yarn; \
     ln -s /opt/yarn-v${YARN_VERSION}/bin/yarnpkg /usr/local/bin/yarnpkg; \
     rm yarn-v${YARN_VERSION}.tar.gz.asc yarn-v${YARN_VERSION}.tar.gz; \
+    apt-mark auto '.*' > /dev/null; \
+    { [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark > /dev/null; }; \
+    find /usr/local -type f -executable -exec ldd '{}' ';' | awk '/=>/ { print $(NF-1) }' | sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual; \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     yarn --version
 
 # Install TZ
