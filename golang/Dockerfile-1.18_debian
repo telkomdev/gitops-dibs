@@ -29,7 +29,8 @@ RUN apt-get update \
 RUN if ! command -v gpg > /dev/null; then apt-get update \
     && apt-get install -y --no-install-recommends \
       gnupg \
-      dirmngr
+      dirmngr; \
+    fi
 RUN apt-get install -y --no-install-recommends \
       git \
       mercurial \
