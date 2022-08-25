@@ -14,8 +14,8 @@ on:
           - 11
       image_variant:
         description: Docker image variant
-        required: required
-        default: "base"
+        required: true
+        default: base
         options:
           - base
           - oci
