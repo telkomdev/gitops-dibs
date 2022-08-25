@@ -3,13 +3,19 @@ on:
   workflow_dispatch:
     inputs:
       image_name:
-       description: 'Docker image name'
-       required: true
-       default: 'kafka-ui'
-      image_variant:
-        description: 'Docker image variant'
+        description: Docker image name
         required: true
-        default: 'all'
+        default: kafka-ui
+      image_version:
+        description: Docker image version
+        required: true
+        default: latest
+        options:
+          - latest
+      image_variant:
+        description: Docker image variant
+        required: true
+        default: all
         type: choice
         options:
           - all
@@ -29,28 +35,28 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - if: "${{ inputs.image_variant != 'all' }}"
-        name: Build and push - ${{ inputs.image_variant }}
+      - if: ${{ inputs.image_variant != 'all' }}
+        name: Build and push - ${{ inputs.image_version }}_${{ inputs.image_variant }}
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
-          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_variant }}
+          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_${{ inputs.image_variant }}
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_variant }}-latest
-      - if: "${{ inputs.image_variant == 'all' }}"
-        name: Build and push - alpine
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}
+      - if: ${{ inputs.image_variant == 'all' }}
+        name: Build and push - ${{ inputs.image_version }}_alpine
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
-          file: ${{ inputs.image_name }}/Dockerfile-alpine
+          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_alpine
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:alpine-latest
-      - if: "${{ inputs.image_variant == 'all' }}"
-        name: Build and push - debian
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-alpine
+      - if: ${{ inputs.image_variant == 'all' }}
+        name: Build and push - ${{ inputs.image_version }}_debian
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
-          file: ${{ inputs.image_name }}/Dockerfile-debian
+          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_debian
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:debian-latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-debian
 
