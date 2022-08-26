@@ -17,6 +17,7 @@ on:
           - 14
           - 12
           - 10
+          - 8
       image_variant:
         description: Docker image variant
         required: true
