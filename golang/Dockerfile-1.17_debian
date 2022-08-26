@@ -5,7 +5,7 @@ LABEL io.k8s.description="Debian (11)"
 LABEL io.k8s.display-name="Debian (11)"
 LABEL io.openshift.non-scalable="false"
 LABEL io.openshift.tags="builder,debian,golang"
-LABEL summary="Virtual Machine (VM) like container platform with Golang 1.18"
+LABEL summary="Virtual Machine (VM) like container platform with Golang 1.17"
 LABEL vendor="Debian"
 LABEL release="1"
 

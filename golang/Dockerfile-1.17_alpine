@@ -5,7 +5,7 @@ LABEL io.k8s.description="Alpine (3.16)"
 LABEL io.k8s.display-name="Alpine (3.16)"
 LABEL io.openshift.non-scalable="false"
 LABEL io.openshift.tags="builder,alpine,golang"
-LABEL summary="Virtual Machine (VM) like container platform with Golang 1.18"
+LABEL summary="Virtual Machine (VM) like container platform with Golang 1.17"
 LABEL vendor="Alpine"
 LABEL release="1"
 
