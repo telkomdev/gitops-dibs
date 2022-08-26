@@ -12,6 +12,7 @@ on:
         default: 1.18
         type: choice
         options:
+          - 1.19
           - 1.18
           - 1.17
           - 1.16
