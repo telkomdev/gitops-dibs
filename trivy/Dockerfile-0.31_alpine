@@ -37,7 +37,8 @@ RUN apk add --no-cache \
     cp -avp trivy /usr/local/bin/trivy; \
     mkdir -p /contrib; \
     cp -avp contrib/*.tpl /contrib; \
-    rm -rf *
+    rm -rf *; \
+    trivy version
 
 # Add tzdata
 RUN apk add --no-cache tzdata
