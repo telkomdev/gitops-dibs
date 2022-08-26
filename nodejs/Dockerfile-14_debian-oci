@@ -1,11 +1,11 @@
 FROM debian:11-slim
 
 LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
-LABEL io.k8s.description="Debian (11) Node.js 16"
-LABEL io.k8s.display-name="Debian (11) Node.js 16"
+LABEL io.k8s.description="Debian (11) Node.js 14"
+LABEL io.k8s.display-name="Debian (11) Node.js 14"
 LABEL io.openshift.non-scalable="false"
 LABEL io.openshift.tags="runner,builder,debian,nodejs"
-LABEL summary="Virtual Machine (VM) like container platform with Node.js 16"
+LABEL summary="Virtual Machine (VM) like container platform with Node.js 14"
 LABEL vendor="Debian"
 LABEL release="1"
 
