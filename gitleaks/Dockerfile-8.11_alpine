@@ -19,7 +19,7 @@ WORKDIR /usr/src/app
 
 # Prerequisites
 RUN adduser -D gitleaks; \
-    apk add --nocache \
+    apk add --no-cache \
         curl \
         ca-certificates \
         tar; \
@@ -55,7 +55,7 @@ RUN apk add --no-cache \
 # Configure Gitleaks
 USER gitleaks
 
-RUN git config --global --add safe.directory
+RUN git config --global --add safe.directory '*'
 
 ENTRYPOINT ["gitleaks"]
 
