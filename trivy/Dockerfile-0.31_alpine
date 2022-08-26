@@ -22,9 +22,17 @@ RUN apk add --no-cache \
         curl \
         ca-certificates \
         tar; \
-    sha256="57321e970a485211eaaeee1e0bb44bf5b5ba939686a2c3052050c4c3e8154d4c"; \
-    curl -Lo trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-ARM64.tar.gz; \
-    echo "${sha256}  trivy.tar.gz" | sha256sum -c -; \
+    alpineArch="$(apk --print-arch)"; \
+    case "${alpineArch##*-}" in \
+      x86_64) \
+        SOURCE="https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"; \
+        CHECKSUM="aef718fd3e6e0714308f35ae567d6442f4ddd351e900d083d4e6e97a7368df73"; \
+        ;; \
+      *) \
+        ;; \
+    esac; \
+    curl -Lo trivy.tar.gz "${SOURCE}"; \
+    echo "${CHECKSUM}  trivy.tar.gz" | sha256sum -c -; \
     tar -xzvpf trivy.tar.gz; \
     cp -avp trivy /usr/local/bin/trivy; \
     mkdir -p /contrib; \
@@ -38,4 +46,6 @@ RUN apk add --no-cache tzdata
 RUN apk del --no-cache --no-network \
         tar; \
     rm -rf /var/cache/apk/*
+
+ENTRYPOINT ["trivy"]
 
