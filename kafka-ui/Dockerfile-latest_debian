@@ -1,4 +1,4 @@
-FROM debian:11
+FROM debian:11-slim
 
 LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
 LABEL io.k8s.description="Debian (11) Kafka-UI"
