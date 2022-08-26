@@ -12,6 +12,7 @@ on:
         default: 16
         options:
           - 16
+          - 14
       image_variant:
         description: Docker image variant
         required: true
