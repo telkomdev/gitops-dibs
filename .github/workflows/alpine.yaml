@@ -10,6 +10,7 @@ on:
         description: Docker image version
         required: true
         default: 3.16
+        type: choice
         options:
           - 3.16
       image_variant:

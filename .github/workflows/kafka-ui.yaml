@@ -10,6 +10,7 @@ on:
         description: Docker image version
         required: true
         default: latest
+        type: choice
         options:
           - latest
       image_variant:
