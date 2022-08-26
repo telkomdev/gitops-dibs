@@ -1,0 +1,61 @@
+FROM alpine:3.16
+
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
+LABEL io.k8s.description="Alpine (3.16) Trivy 8.11"
+LABEL io.k8s.display-name="Alpine (3.16) Trivy 8.11"
+LABEL io.openshift.non-scalable="false"
+LABEL io.openshift.tags="runner,security,alpine"
+LABEL summary="Virtual Machine (VM) like container platform with Gitleaks"
+LABEL vendor="Alpine"
+LABEL release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta"
+
+ENV GITLEAKS_VERSION="8.11.1"
+
+WORKDIR /usr/src/app
+
+# Prerequisites
+RUN adduser -D gitleaks; \
+    apk add --nocache \
+        curl \
+        ca-certificates \
+        tar; \
+    apk add --no-cache \
+        bash \
+        git \
+        openssh-client
+
+# Install Gitleaks
+RUN alpineArch="$(apk --print-arch)"; \
+    case "${alpineArch##*-}" in \
+      x86_64) \
+        SOURCE="https://github.com/zricethezav/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"; \
+        CHECKSUM="6f7c60f4b8194c0d8d860dd7af65361d4dc52b2df1aafd03287ea3446a75e9cd"; \
+        ;; \
+      *) \
+        ;; \
+    esac; \
+    curl -Lo gitleaks.tar.gz "${SOURCE}"; \
+    echo "${CHECKSUM}  gitleaks.tar.gz" | sha256sum -c -; \
+    tar -xzvpf gitleaks.tar.gz; \
+    cp -avp gitleaks /usr/local/bin/gitleaks; \
+    rm -rf *; \
+    gitleaks version
+
+# Add tzdata
+RUN apk add --no-cache \
+        tzdata; \
+    apk del --no-cache --no-network \
+        tar; \
+    rm -rf /var/cache/apk/*
+
+# Configure Gitleaks
+USER gitleaks
+
+RUN git config --global --add safe.directory
+
+ENTRYPOINT ["gitleaks"]
+
