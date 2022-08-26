@@ -17,6 +17,7 @@ on:
           - 1.17
           - 1.16
           - 1.15
+          - 1.14
       image_variant:
         description: Docker image variant
         required: true
