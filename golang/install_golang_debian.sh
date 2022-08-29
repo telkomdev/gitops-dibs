@@ -82,7 +82,7 @@ if [ -z "${url}" ]; then \
     '1.19') \
       sha256='9419cc70dc5a2523f29a77053cafff658ed21ef3561d9b6b020280ebceab28b9'; \
       ;; \
-  ;; \
+  esac; \
   echo >&2; \
   echo >&2 "warning: current architecture (${arch}) does not have a compatible Go binary release; will be building from source"; \
   echo >&2; \
