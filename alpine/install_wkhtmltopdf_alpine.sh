@@ -17,6 +17,6 @@ apk add --no-cache --virtual .build-deps \
 update-ms-fonts; \
 fc-cache -f; \
 rm -rf /tmp/*; \
-apk del .build-deps; \ 
+apk del --no-cache --no-network .build-deps; \
 rm -f install_wkhtmltopdf_alpine.sh
 
