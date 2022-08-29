@@ -1,11 +1,11 @@
 FROM alpine:3.16
 
 LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
-LABEL io.k8s.description="Alpine (3.16) Node.js 10"
-LABEL io.k8s.display-name="Alpine (3.16) Node.js 10"
+LABEL io.k8s.description="Alpine (3.16) glibc Node.js 10"
+LABEL io.k8s.display-name="Alpine (3.16) glibc Node.js 10"
 LABEL io.openshift.non-scalable="false"
 LABEL io.openshift.tags="runner,builder,alpine,nodejs"
-LABEL summary="Virtual Machine (VM) like container platform with Node.js 10"
+LABEL summary="Virtual Machine (VM) like container platform glibc with Node.js 10"
 LABEL vendor="Alpine"
 LABEL release="1"
 
