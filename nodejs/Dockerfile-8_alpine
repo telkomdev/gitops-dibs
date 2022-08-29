@@ -1,0 +1,35 @@
+FROM alpine:3.16
+
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
+LABEL io.k8s.description="Alpine (3.16) Node.js 8"
+LABEL io.k8s.display-name="Alpine (3.16) Node.js 8"
+LABEL io.openshift.non-scalable="false"
+LABEL io.openshift.tags="runner,builder,alpine,nodejs"
+LABEL summary="Virtual Machine (VM) like container platform with Node.js 10"
+LABEL vendor="Alpine"
+LABEL release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta"
+
+WORKDIR /usr/src/app
+
+# Install Node.js
+ENV NODE_VERSION="8.17.0"
+COPY install_nodejs_alpine.sh .
+RUN /bin/sh install_nodejs_alpine.sh
+
+# Install yarn
+ENV YARN_VERSION="1.21.1"
+COPY install_yarn_alpine.sh .
+RUN /bin/sh install_yarn_alpine.sh
+
+# Custom configuration for Alpine Linux
+COPY configure_alpine.sh .
+RUN /bin/sh configure_alpine.sh
+
+COPY docker-entrypoint.sh /usr/local/bin
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+
