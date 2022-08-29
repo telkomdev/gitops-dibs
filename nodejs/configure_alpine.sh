@@ -1,0 +1,1 @@
+../alpine/configure_alpine.sh
