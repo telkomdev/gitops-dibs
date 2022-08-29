@@ -15,20 +15,24 @@ ENV LANG="C.UTF-8" \
     DEBIAN_FRONTEND="noninteractive"
 
 ENV INSTANT_CLIENT_VERSION="21.7.0" \
-    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}"
+    PATH="/opt/oracle/instantclient:${PATH}" \
+    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
+    ORACLE_BASE="/opt/oracle/instantclient" \
+    TNS_ADMIN="/opt/oracle/instantclient" \
+    ORACLE_HOME="/opt/oracle/instantclient"
 
 WORKDIR /usr/src/app
 
 # Prerequisites
-RUN apt-get update -y \
-      && apt-get install -y --no-install-recommends \
+RUN apt-get update -y; \
+    apt-get install -y --no-install-recommends \
         libaio1 \
         ca-certificates \
         unzip \
         wget
 
 # Install instantclient
-RUN wget "https://download.oracle.com/otn_software/linux/instantclient/217000/instantclient-basic-linux.x64-21.7.0.0.0dbru.zip" -O instantclient.zip \
+RUN wget -O instantclient.zip "https://download.oracle.com/otn_software/linux/instantclient/217000/instantclient-basiclite-linux.x64-${INSTANT_CLIENT_VERSION}.0.0dbru.zip" \
         && unzip instantclient.zip \
         && rm -rf instantclient.zip \
         && mkdir -p /opt/oracle/instantclient \
