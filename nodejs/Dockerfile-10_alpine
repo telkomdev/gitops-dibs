@@ -17,7 +17,7 @@ WORKDIR /usr/src/app
 
 # Install Node.js
 ENV NODE_VERSION="10.24.1"
-COPY install_nodejs_alpine.sh
+COPY install_nodejs_alpine.sh .
 RUN /bin/sh install_nodejs_alpine.sh
 
 # Install yarn
