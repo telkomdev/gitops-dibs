@@ -17,8 +17,8 @@ WORKDIR /usr/src/app
 
 # Install glibc
 ENV GLIBC_VERSION="2.35-r0"
-COPY install_glibc.sh .
-RUN /bin/sh install_glibc.sh
+COPY install_glibc_alpine.sh .
+RUN /bin/sh install_glibc_alpine.sh
 
 # Custom configuration for Alpine Linux
 COPY configure_alpine.sh .
