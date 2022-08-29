@@ -26,6 +26,7 @@ on:
         options:
           - all
           - alpine
+          - alpine-glibc
           - debian
           - debian-oci
 jobs:
