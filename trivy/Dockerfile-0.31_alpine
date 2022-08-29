@@ -1,52 +1,29 @@
 FROM alpine:3.16
 
-LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
-LABEL io.k8s.description="Alpine (3.16) Trivy 0.31"
-LABEL io.k8s.display-name="Alpine (3.16) Trivy 0.31"
-LABEL io.openshift.non-scalable="false"
-LABEL io.openshift.tags="runner,security,alpine"
-LABEL summary="Virtual Machine (VM) like container platform with Trivy"
-LABEL vendor="Alpine"
-LABEL release="1"
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Alpine (3.16) Trivy 0.31" \
+      io.k8s.display-name="Alpine (3.16) Trivy 0.31" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="runner,security,alpine" \
+      summary="Virtual Machine (VM) like container platform with Trivy" \
+      vendor="Alpine" \
+      release="1"
 
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
     TZ="Asia/Jakarta"
 
-ENV TRIVY_VERSION="0.31.2"
-
 WORKDIR /usr/src/app
 
-# Install Trivy
-RUN apk add --no-cache \
-        curl \
-        ca-certificates \
-        tar; \
-    alpineArch="$(apk --print-arch)"; \
-    case "${alpineArch##*-}" in \
-      x86_64) \
-        SOURCE="https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"; \
-        CHECKSUM="aef718fd3e6e0714308f35ae567d6442f4ddd351e900d083d4e6e97a7368df73"; \
-        ;; \
-      *) \
-        ;; \
-    esac; \
-    curl -Lo trivy.tar.gz "${SOURCE}"; \
-    echo "${CHECKSUM}  trivy.tar.gz" | sha256sum -c -; \
-    tar -xzvpf trivy.tar.gz; \
-    cp -avp trivy /usr/local/bin/trivy; \
-    mkdir -p /contrib; \
-    cp -avp contrib/*.tpl /contrib; \
-    rm -rf *; \
-    trivy version
+# Install trivy
+ENV TRIVY_VERSION="0.31.2"
+COPY install_trivy_alpine.sh .
+RUN /bin/sh install_trivy_alpine.sh
 
-# Add tzdata
-RUN apk add --no-cache tzdata
+# Custom configuration for Alpine Linux
+COPY configure_alpine.sh .
+RUN /bin/sh configure_alpine.sh
 
-# Cleanup
-RUN apk del --no-cache --no-network \
-        tar; \
-    rm -rf /var/cache/apk/*
 
 ENTRYPOINT ["trivy"]
 
