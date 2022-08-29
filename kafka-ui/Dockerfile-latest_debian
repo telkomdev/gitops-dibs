@@ -1,38 +1,31 @@
 FROM debian:11-slim
 
-LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
-LABEL io.k8s.description="Debian (11) Kafka-UI"
-LABEL io.k8s.display-name="Debian (11) Kafka-UI"
-LABEL io.openshift.non-scalable="false"
-LABEL io.openshift.tags="runner,debian,kafka"
-LABEL summary="Virtual Machine (VM) like container platform with Kafka-UI"
-LABEL vendor="Debian"
-LABEL release="1"
-
-# Fix Log4j vulnerabilty issue
-ENV LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-    JAVA_OPTS="-Dlog4j2.formatMsgNoLookups=true"
-
-ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Debian (11) Kafka-UI" \
+      io.k8s.display-name="Debian (11) Kafka-UI" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="runner,debian,kafka" \
+      summary="Virtual Machine (VM) like container platform with Kafka-UI" \
+      vendor="Debian" \
+      release="1"
 
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
     TZ="Asia/Jakarta" \
     DEBIAN_FRONTEND="noninteractive"
 
-ENV KAFKA_UI_VERSION="0.4.0"
-
 WORKDIR /usr/src/app
 
-RUN apt-get update -y \
-      && apt-get install -y --no-install-recommends curl openjdk-11-jre \
-      && curl -Lo kafka-ui-api.jar "https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-api-v${KAFKA_UI_VERSION}.jar" \
-      && sha256="cedd15fab7de6d3f4616b69b5e9f3e456a57e927bc7809e2e8f6bc500670ac68" \
-      && echo "${sha256}  kafka-ui-api.jar" | sha256sum -c - \
-      && apt-get remove -y --purge curl \
-      && apt-get autoremove -y --purge \
-      && apt-get clean -y \
-      && rm -rf /var/lib/apt/lists/*
+# Install kafka-ui
+ENV KAFKA_UI_VERSION="0.4.0" \
+    LOG4J_FORMAT_MSG_NO_LOOKUPS="true" \
+    JAVA_OPTS="-Dlog4j2.formatMsgNoLookups=true"
+COPY install_kafkaui_debian.sh .
+RUN /bin/sh install_kafkaui_debian.sh
+
+# Custom configuration for Debian
+COPY configure_debian.sh .
+RUN /bin/sh configure_debian.sh
 
 USER nobody:nobody
 
