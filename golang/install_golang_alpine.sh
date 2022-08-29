@@ -1,6 +1,9 @@
 set -ex; \
 [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf; \
 apk add --no-cache ca-certificates; \
+apk add --no-cache \
+    gcc \
+    musl-dev; \
 apk add --no-cache --virtual .fetch-deps gnupg; \
 arch="$(apk --print-arch)"; \
 url=; \
