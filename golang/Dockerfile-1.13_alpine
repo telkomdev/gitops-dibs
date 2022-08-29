@@ -1,8 +1,8 @@
 FROM alpine:3.16
 
 LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
-LABEL io.k8s.description="Alpine (3.16)"
-LABEL io.k8s.display-name="Alpine (3.16)"
+LABEL io.k8s.description="Alpine (3.16) golang 1.13"
+LABEL io.k8s.display-name="Alpine (3.16) golang 1.13"
 LABEL io.openshift.non-scalable="false"
 LABEL io.openshift.tags="builder,alpine,golang"
 LABEL summary="Virtual Machine (VM) like container platform with Golang 1.13"
