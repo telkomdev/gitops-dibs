@@ -27,7 +27,7 @@ ENV INSTANT_CLIENT_VERSION="21.7.0" \
     TNS_ADMIN="/opt/oracle/instantclient" \
     LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
     PATH="/opt/oracle/instantclient:${PATH}"
-COPY install_oci.sh .
+COPY install_oci_alpine.sh .
 RUN /bin/sh install_oci_alpine.sh
 
 # Custom configuration for Alpine Linux
