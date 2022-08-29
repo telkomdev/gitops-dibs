@@ -28,6 +28,7 @@ on:
           - all
           - alpine
           - alpine-glibc
+          - alpine-wkhtmltopdf
           - debian
 jobs:
   push_to_registries:
@@ -67,6 +68,14 @@ jobs:
           file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_alpine-glibc
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-alpine-glibc
+      - if: ${{ inputs.image_variant == 'all' }}
+        name: "Build and push - ${{ inputs.image_name }}:${{ inputs.image_version }}-alpine-wkhtmltopdf"
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.image_name }}
+          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_alpine-wkhtmltopdf
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-alpine-wkhtmltopdf
       - if: ${{ inputs.image_variant == 'all' }}
         name: "Build and push - ${{ inputs.image_name }}:${{ inputs.image_version }}-debian"
         uses: docker/build-push-action@v3
