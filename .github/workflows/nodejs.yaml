@@ -75,4 +75,12 @@ jobs:
           file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_debian
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-debian
+      - if: ${{ inputs.image_variant == 'all' }}
+        name: "Build and push - ${{ inputs.image_name }}:${{ inputs.image_version }}-debian-oci"
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.image_name }}
+          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_debian-oci
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-debian-oci
 
