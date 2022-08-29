@@ -8,5 +8,5 @@ sha256="cedd15fab7de6d3f4616b69b5e9f3e456a57e927bc7809e2e8f6bc500670ac68"; \
 echo "${sha256}  kafka-ui-api.jar" | sha256sum -c - || exit 1; \
 apk del --purge \
     curl; \
-rm install_kafkaui_alpine.sh
+rm -f install_kafkaui_alpine.sh
 
