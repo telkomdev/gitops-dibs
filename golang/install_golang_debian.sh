@@ -49,10 +49,11 @@ case "${arch}" in \
       '1.19') \
         sha256='464b6b66591f6cf055bc5df90a9750bf5fbc9d038722bb84a9d56a2bea974be6'; \
         ;; \
+    esac; \
     ;; \
   *) \
     echo >&2 "error: unsupported architecture '$arch' (likely packaging update needed)"; \
-    exit 1 \
+    exit 1; \
     ;; \
 esac; \
 build=; \
