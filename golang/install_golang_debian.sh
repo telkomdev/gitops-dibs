@@ -88,8 +88,8 @@ if [ -z "${url}" ]; then \
   echo >&2; \
 fi; \
 curl -Lo go.tgz.asc "${url}.asc"; \
-curl -Lo go.tgz "${url}" --progress=dot:giga; \
-echo "${sha256} *go.tgz" | sha256sum -c -; \
+curl -Lo go.tgz "${url}"; \
+echo "${sha256} *go.tgz" | sha256sum -c - || exit 1; \
 GNUPGHOME="$(mktemp -d)"; \
 export GNUPGHOME; \
 gpg --batch --keyserver keyserver.ubuntu.com --recv-keys 'EB4C 1BFD 4F04 2F6D DDCC  EC91 7721 F63B D38B 4796'; \
