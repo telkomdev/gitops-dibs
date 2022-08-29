@@ -1,38 +1,30 @@
 FROM alpine:3.16
 
-LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
-LABEL io.k8s.description="Alpine (3.16) Kafka-UI"
-LABEL io.k8s.display-name="Alpine (3.16) Kafka-UI"
-LABEL io.openshift.non-scalable="false"
-LABEL io.openshift.tags="runner,alpine,kafka"
-LABEL summary="Virtual Machine (VM) like container platform with Kafka-UI"
-LABEL vendor="Alpine"
-LABEL release="1"
-
-# Fix Log4j vulnerabilty issue
-ENV LOG4J_FORMAT_MSG_NO_LOOKUPS=true \
-    JAVA_OPTS="-Dlog4j2.formatMsgNoLookups=true"
-
-ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Alpine (3.16) Kafka-UI" \
+      io.k8s.display-name="Alpine (3.16) Kafka-UI" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="runner,alpine,kafka" \
+      summary="Virtual Machine (VM) like container platform with Kafka-UI" \
+      vendor="Alpine" \
+      release="1"
 
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
     TZ="Asia/Jakarta"
 
-ENV KAFKA_UI_VERSION="0.4.0"
-
 WORKDIR /usr/src/app
 
-RUN apk add --no-cache tzdata
+# Install kakfa-ui
+ENV KAFKA_UI_VERSION="0.4.0" \
+    LOG4J_FORMAT_MSG_NO_LOOKUPS="true" \
+    JAVA_OPTS="-Dlog4j2.formatMsgNoLookups=true"
+COPY install_kafkaui_alpine.sh .
+RUN /bin/sh install_kafkaui_alpine.sh
 
-RUN apk add --no-cache curl openjdk13-jre \
-      && curl -Lo kafka-ui-api.jar "https://github.com/provectus/kafka-ui/releases/download/v${KAFKA_UI_VERSION}/kafka-ui-api-v${KAFKA_UI_VERSION}.jar" \
-      && sha256="cedd15fab7de6d3f4616b69b5e9f3e456a57e927bc7809e2e8f6bc500670ac68" \
-      && echo "${sha256}  kafka-ui-api.jar" | sha256sum -c - \
-      && apk del --purge curl
-
-RUN apk add --no-cache tzdata \
-      && rm -rf /var/cache/apk/*
+# Custom configuration for Alpine Linux
+COPY configure_alpine.sh .
+RUN /bin/sh configure_alpine.sh
 
 USER nobody:nobody
 
