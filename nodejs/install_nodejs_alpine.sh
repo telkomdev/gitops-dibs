@@ -35,7 +35,9 @@ if [ -n "${CHECKSUM}" ]; then \
   ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
 else \
   echo "Building from source"; \
-  apk add --no-cache --virtual .build-deps-full binutils-gold g++ gcc gnupg libgcc linux-headers make python3; \
+  python_version="2"; \
+  [ $(echo ${NODE_VERSION} | awk -F[\.] '{print $1}') -gt 10 ] && python_version="3"; \
+  apk add --no-cache --virtual .build-deps-full binutils-gold g++ gcc gnupg libgcc linux-headers make python${python_version}; \
   for key in \
     4ED778F539E3634C779C87C6D7062848A1AB005C \
     141F07595B7B3FFE74309A937405533BE57C7D57 \
