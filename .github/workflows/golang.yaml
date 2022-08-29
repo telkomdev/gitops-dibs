@@ -60,6 +60,14 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-alpine
       - if: ${{ inputs.image_variant == 'all' }}
+        name: "Build and push - ${{ inputs.image_name }}:${{ inputs.image_version }}-alpine-glibc"
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.image_name }}
+          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_alpine-glibc
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-alpine-glibc
+      - if: ${{ inputs.image_variant == 'all' }}
         name: "Build and push - ${{ inputs.image_name }}:${{ inputs.image_version }}-debian"
         uses: docker/build-push-action@v3
         with:
