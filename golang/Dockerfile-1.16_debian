@@ -1,8 +1,8 @@
 FROM debian:11-slim
 
 LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
-LABEL io.k8s.description="Debian (11)"
-LABEL io.k8s.display-name="Debian (11)"
+LABEL io.k8s.description="Debian (11) golang 1.16"
+LABEL io.k8s.display-name="Debian (11) golang 1.16"
 LABEL io.openshift.non-scalable="false"
 LABEL io.openshift.tags="builder,debian,golang"
 LABEL summary="Virtual Machine (VM) like container platform with Golang 1.16"
