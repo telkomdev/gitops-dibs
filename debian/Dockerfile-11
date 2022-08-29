@@ -16,5 +16,9 @@ ENV LANG="C.UTF-8" \
 
 WORKDIR /usr/src/app
 
+# Custom configuration for Debian
+COPY configure_debian.sh .
+RUN /bin/sh configure_debian.sh
+
 USER nobody:nobody
 

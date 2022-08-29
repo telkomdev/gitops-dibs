@@ -14,41 +14,21 @@ ENV LANG="C.UTF-8" \
     TZ="Asia/Jakarta" \
     DEBIAN_FRONTEND="noninteractive"
 
-ENV INSTANT_CLIENT_VERSION="21.7.0" \
-    PATH="/opt/oracle/instantclient:${PATH}" \
-    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
-    ORACLE_BASE="/opt/oracle/instantclient" \
-    TNS_ADMIN="/opt/oracle/instantclient" \
-    ORACLE_HOME="/opt/oracle/instantclient"
-
 WORKDIR /usr/src/app
 
-# Prerequisites
-RUN apt-get update -y; \
-    apt-get install -y --no-install-recommends \
-        libaio1 \
-        ca-certificates \
-        unzip \
-        wget
-
 # Install instantclient
-RUN wget -O instantclient.zip "https://download.oracle.com/otn_software/linux/instantclient/217000/instantclient-basiclite-linux.x64-${INSTANT_CLIENT_VERSION}.0.0dbru.zip" \
-        && sha256="8a745ad7f4290ff8f7bd1d9436f6afdf07644e390b5d6acc3dc50978687795cb" \
-        && echo "${sha256}  instantclient.zip" | sha256sum -c - \
-        && unzip instantclient.zip \
-        && rm -rf instantclient.zip \
-        && mkdir -p /opt/oracle/instantclient \
-        && mv instantclient_*/* /opt/oracle/instantclient/ \
-        && rm -rf instantclient_* \
-        && echo "/opt/oracle/instantclient" > /etc/ld.so.conf.d/oracle-instantclient.conf \
-        && ldconfig
+ENV INSTANT_CLIENT_VERSION="21.7.0" \
+    ORACLE_BASE="/opt/oracle/instantclient" \
+    ORACLE_HOME="/opt/oracle/instantclient" \
+    TNS_ADMIN="/opt/oracle/instantclient" \
+    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
+    PATH="/opt/oracle/instantclient:${PATH}"
+COPY install_oci_debian.sh .
+RUN /bin/sh install_oci_debian.sh
 
-# Cleanup
-RUN apt-get remove -y --purge wget unzip \
-     && apt-get autoremove -y --purge \
-     && apt-get autoclean -y \
-     && apt-get clean -y \
-     && rm -rf rm -rf /var/lib/apt/lists/*
+# Custom configuration for Debian
+COPY configure_debian.sh .
+RUN /bin/sh configure_debian.sh
 
 USER nobody:nobody
 
