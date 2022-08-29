@@ -27,6 +27,7 @@ on:
         options:
           - all
           - alpine
+          - alpine-glibc
           - debian
 jobs:
   push_to_registries:
