@@ -15,7 +15,7 @@ ENV LANG="C.UTF-8" \
 
 WORKDIR /usr/src/app
 
-# Install kakfa-ui
+# Install kafka-ui
 ENV KAFKA_UI_VERSION="0.4.0" \
     LOG4J_FORMAT_MSG_NO_LOOKUPS="true" \
     JAVA_OPTS="-Dlog4j2.formatMsgNoLookups=true"
