@@ -1,4 +1,5 @@
 set -ex; \
+apt-get update -y; \
 apt-get install -y --no-install-recommends \
     libaio1; \
 apt-get install -y --no-install-recommends \
