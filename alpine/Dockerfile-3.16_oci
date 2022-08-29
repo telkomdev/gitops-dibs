@@ -13,82 +13,26 @@ ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
     TZ="Asia/Jakarta"
 
-ENV GLIBC_VERSION="2.35-r0" \
-    INSTANT_CLIENT_VERSION="21.7.0" \
-    PATH="/opt/oracle/instantclient:${PATH}" \
-    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
-    ORACLE_BASE="/opt/oracle/instantclient" \
-    TNS_ADMIN="/opt/oracle/instantclient" \
-    ORACLE_HOME="/opt/oracle/instantclient"
-
 WORKDIR /usr/src/app
 
 # Install glibc
-RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download"; \
-    ALPINE_GLIBC_BASE_PACKAGE_FILENAME="glibc-${GLIBC_VERSION}.apk"; \
-    ALPINE_GLIBC_BIN_PACKAGE_FILENAME="glibc-bin-${GLIBC_VERSION}.apk"; \
-    ALPINE_GLIBC_I18N_PACKAGE_FILENAME="glibc-i18n-${GLIBC_VERSION}.apk"; \
-    apk add --no-cache --virtual=.build-dependencies \
-        wget \
-        ca-certificates; \
-    echo \
-        "-----BEGIN PUBLIC KEY-----\
-        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApZ2u1KJKUu/fW4A25y9m\
-        y70AGEa/J3Wi5ibNVGNn1gT1r0VfgeWd0pUybS4UmcHdiNzxJPgoWQhV2SSW1JYu\
-        tOqKZF5QSN6X937PTUpNBjUvLtTQ1ve1fp39uf/lEXPpFpOPL88LKnDBgbh7wkCp\
-        m2KzLVGChf83MS0ShL6G9EQIAUxLm99VpgRjwqTQ/KfzGtpke1wqws4au0Ab4qPY\
-        KXvMLSPLUp7cfulWvhmZSegr5AdhNw5KNizPqCJT8ZrGvgHypXyiFvvAH5YRtSsc\
-        Zvo9GI2e2MaZyo9/lvb+LbLEJZKEQckqRj4P26gmASrZEPStwc+yqy1ShHLA0j6m\
-        1QIDAQAB\
-        -----END PUBLIC KEY-----" | sed 's/   */\n/g' > "/etc/apk/keys/sgerrand.rsa.pub"; \
-    wget \
-        "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" \
-        "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" \
-        "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}"; \
-    sha256_base="02fe2d91f53eab93c64d74485b80db575cfb4de40bc0d12bf55839fbe16cb041"; \
-    sha256_bin="720b870b51f64324e318370eda080b5ee99332c36b80be975968136e06c1af93"; \
-    sha256_i18n="171062071e7db01e4daefc2acdb798da5ed410df1078226d755c08c46c124063"; \
-    echo "${sha256_base}  ${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" | sha256sum -c -; \
-    echo "${sha256_bin}  ${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" | sha256sum -c -; \
-    echo "${sha256_i18n}  ${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}" | sha256sum -c -; \
-    apk add --no-cache \
-        "${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" \
-        "${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" \
-        "${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}"; \
-    rm -f "/etc/apk/keys/sgerrand.rsa.pub"; \
-    (/usr/glibc-compat/bin/localedef --force --inputfile POSIX --charmap UTF-8 "$LANG" || true); \
-    echo "export LANG=${LANG}" > /etc/profile.d/locale.sh; \
-    apk del glibc-i18n; \
-    rm -f "/root/.wget-hsts"; \
-    apk del .build-dependencies; \
-    rm \
-        "${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" \
-        "${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" \
-        "${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}"
+ENV GLIBC_VERSION="2.35-r0"
+COPY install_glibc.sh .
+RUN /bin/sh install_glibc.sh
 
 # Install instantclient
-RUN apk add --no-cache \
-        ca-certificates \
-        libaio \
-        libnsl \
-        unzip \
-        wget; \
-    wget -O instantclient.zip "https://download.oracle.com/otn_software/linux/instantclient/217000/instantclient-basiclite-linux.x64-${INSTANT_CLIENT_VERSION}.0.0dbru.zip"; \
-    sha256="8a745ad7f4290ff8f7bd1d9436f6afdf07644e390b5d6acc3dc50978687795cb"; \
-    echo "${sha256}  instantclient.zip" | sha256sum -c -; \
-    unzip instantclient.zip; \
-    rm -rf instantclient.zip; \
-    mkdir -p ${ORACLE_BASE}; \
-    mv instantclient_*/* ${ORACLE_BASE}/; \
-    rm -rf instantclient_*; \
-    ln -s ${ORACLE_BASE}/libclntsh.so.21.1 /usr/lib/libclntsh.so; \
-    ln -s ${ORACLE_BASE}/libocci.so.21.1 /usr/lib/libocci.so; \
-    ln -s ${ORACLE_BASE}/libociicus.so /usr/lib/libociicus.so; \
-    ln -s ${ORACLE_BASE}/libnnz21.so /usr/lib/libnnz21.so
+ENV INSTANT_CLIENT_VERSION="21.7.0" \
+    ORACLE_BASE="/opt/oracle/instantclient" \
+    ORACLE_HOME="/opt/oracle/instantclient" \
+    TNS_ADMIN="/opt/oracle/instantclient" \
+    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
+    PATH="/opt/oracle/instantclient:${PATH}"
+COPY install_oci.sh .
+RUN /bin/sh install_oci.sh
 
-# Install tzdata
-RUN apk add --no-cache tzdata \
-      && rm -rf /var/cache/apk/*
+# Custom configuration for Alpine Linux
+COPY configure_alpine.sh .
+RUN /bin/sh configure_alpine.sh
 
 USER nobody:nobody
 
