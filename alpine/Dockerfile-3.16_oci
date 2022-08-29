@@ -4,8 +4,8 @@ LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.i
 LABEL io.k8s.description="Alpine (3.16) oci"
 LABEL io.k8s.display-name="Alpine (3.16) oci"
 LABEL io.openshift.non-scalable="false"
-LABEL io.openshift.tags="runner,alpine"
-LABEL summary="Virtual Machine (VM) like container platform"
+LABEL io.openshift.tags="runner,alpine,oracle"
+LABEL summary="Virtual Machine (VM) like container platform with Oracle Instant Client"
 LABEL vendor="Alpine"
 LABEL release="1"
 
@@ -15,6 +15,7 @@ ENV LANG="C.UTF-8" \
 
 ENV GLIBC_VERSION="2.35-r0" \
     INSTANT_CLIENT_VERSION="21.7.0" \
+    PATH="/opt/oracle/instantclient:${PATH}" \
     LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
     ORACLE_BASE="/opt/oracle/instantclient" \
     TNS_ADMIN="/opt/oracle/instantclient" \
