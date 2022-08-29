@@ -1,141 +1,29 @@
 FROM debian:11-slim
 
-LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
-LABEL io.k8s.description="Debian (11) golang 1.17"
-LABEL io.k8s.display-name="Debian (11) golang 1.17"
-LABEL io.openshift.non-scalable="false"
-LABEL io.openshift.tags="builder,debian,golang"
-LABEL summary="Virtual Machine (VM) like container platform with Golang 1.17"
-LABEL vendor="Debian"
-LABEL release="1"
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Debian (11) Golang 1.17" \
+      io.k8s.display-name="Debian (11) Golang 1.17" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="builder,debian,golang" \
+      summary="Virtual Machine (VM) like container platform with Golang 1.17" \
+      vendor="Debian" \
+      release="1"
 
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
     TZ="Asia/Jakarta" \
-    DEBIAN_FRONTEND="noninteractive" \
-    PATH=/go/bin:/usr/local/go/bin:${PATH}
-
-ENV GOLANG_VERSION="1.17.13" \
-    GOPATH="/go"
+    DEBIAN_FRONTEND="noninteractive"
 
 WORKDIR /usr/src/app
 
-# Install prerequisites
-RUN apt-get update \
-      && apt-get install -y --no-install-recommends \
-        ca-certificates \
-        curl \
-        netbase \
-        wget
-RUN if ! command -v gpg > /dev/null; then \
-      apt-get update \
-        && apt-get install -y --no-install-recommends \
-          gnupg \
-          dirmngr; \
-    fi
-RUN apt-get install -y --no-install-recommends \
-      git \
-      mercurial \
-      openssh-client \
-      subversion \
-      procps
-RUN apt-get install -y --no-install-recommends \
-      g++ \
-      gcc \
-      libc6-dev \
-      make \
-      pkg-config
-
 # Install golang
-RUN arch="$(dpkg --print-architecture)"; \
-    arch="${arch##*-}"; \
-    url=; \
-    case "${arch}" in \
-      'amd64') \
-        url="https://dl.google.com/go/go${GOLANG_VERSION}.linux-amd64.tar.gz"; \
-        sha256='4cdd2bc664724dc7db94ad51b503512c5ae7220951cac568120f64f8e94399fc'; \
-        ;; \
-      'armel') \
-        export GOARCH='arm' GOARM='5' GOOS='linux'; \
-        ;; \
-      'armhf') \
-        url="https://dl.google.com/go/go${GOLANG_VERSION}.linux-armv6l.tar.gz"; \
-        sha256='260431d7deeb8893c21e71fcbbb1fde3258616d8eba584c8d72060228ab42c86'; \
-        ;; \
-      'arm64') \
-        url="https://dl.google.com/go/go${GOLANG_VERSION}.linux-arm64.tar.gz"; \
-        sha256='914daad3f011cc2014dea799bb7490442677e4ad6de0b2ac3ded6cee7e3f493d'; \
-        ;; \
-      'i386') \
-        url="https://dl.google.com/go/go${GOLANG_VERSION}.linux-386.tar.gz"; \
-        sha256='5e02f35aecc6b89679f631e0edf12c49922dd31c8140cf8dd725c5797a9f2425'; \
-        ;; \
-      'mips64el') \
-        export GOARCH='mips64le' GOOS='linux'; \
-        ;; \
-      'ppc64el') \
-        url="https://dl.google.com/go/go${GOLANG_VERSION}.linux-ppc64le.tar.gz"; \
-        sha256='bd0763fb130f8412672ffe1e4a8e65888ebe2419e5caa9a67ac21e8c298aa254'; \
-        ;; \
-      's390x') \
-        url="https://dl.google.com/go/go${GOLANG_VERSION}.linux-s390x.tar.gz"; \
-        sha256='08f6074e1e106cbe5d78622357db71a93648c7a4c4e4b02e3b5f2a1828914c76'; \
-        ;; \
-      *) \
-        echo >&2 "error: unsupported architecture '$arch' (likely packaging update needed)"; \
-        exit 1 \
-        ;; \
-    esac; \
-    build=; \
-    if [ -z "${url}" ]; then \
-      build=1; \
-      url="https://dl.google.com/go/go${GOLANG_VERSION}.src.tar.gz"; \
-      sha256='a1a48b23afb206f95e7bbaa9b898d965f90826f6f1d1fc0c1d784ada0cd300fd'; \
-      echo >&2; \
-      echo >&2 "warning: current architecture (${arch}) does not have a compatible Go binary release; will be building from source"; \
-      echo >&2; \
-    fi; \
-    wget -O go.tgz.asc "${url}.asc"; \
-    wget -O go.tgz "${url}" --progress=dot:giga; \
-    echo "${sha256} *go.tgz" | sha256sum -c -; \
-    GNUPGHOME="$(mktemp -d)"; \
-    export GNUPGHOME; \
-    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys 'EB4C 1BFD 4F04 2F6D DDCC  EC91 7721 F63B D38B 4796'; \
-    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys '2F52 8D36 D67B 69ED F998  D857 78BD 6547 3CB3 BD13'; \
-    gpg --batch --verify go.tgz.asc go.tgz; \
-    gpgconf --kill all; \
-    rm -rf "${GNUPGHOME}" go.tgz.asc; \
-    tar -C /usr/local -xzf go.tgz; \
-    rm go.tgz; \
-    if [ -n "${build}" ]; then \
-      savedAptMark="$(apt-mark showmanual)"; \
-      apt-get update; \
-      apt-get install -y --no-install-recommends golang-go; \
-      export GOCACHE='/tmp/gocache'; \
-      (cd /usr/local/go/src; export GOROOT_BOOTSTRAP="$(go env GOROOT)" GOHOSTOS="${GOOS}" GOHOSTARCH="${GOARCH}"; ./make.bash;); \
-      apt-mark auto '.*' > /dev/null; \
-      apt-mark manual ${savedAptMark} > /dev/null; \
-      apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-      rm -rf /var/lib/apt/lists/*; \
-      rm -rf /usr/local/go/pkg/*/cmd \
-          /usr/local/go/pkg/bootstrap \
-          /usr/local/go/pkg/obj \
-          /usr/local/go/pkg/tool/*/api \
-          /usr/local/go/pkg/tool/*/go_bootstrap \
-          /usr/local/go/src/cmd/dist/dist \
-          "${GOCACHE}"; \
-    fi; \
-    go version
+ENV GOLANG_VERSION="1.17.13" \
+    GOPATH="/go" \
+    PATH=/go/bin:/usr/local/go/bin:${PATH}
+COPY install_golang_debian.sh .
+RUN /bin/sh install_golang_debian.sh
 
-# Configure golang
-RUN mkdir -p "${GOPATH}/src" "${GOPATH}/bin" \
-      && chmod -R 777 "${GOPATH}"
-
-# Install TZ
-RUN apt-get install -y --no-install-recommends tzdata
-
-# Cleanup
-RUN apt-get clean -y \
-    && apt-get autoclean -y \
-    && rm -rf /var/cache/apt/*
+# Custom configuration for Debian
+COPY configure_debian.sh .
+RUN /bin/sh configure_debian.sh
 
