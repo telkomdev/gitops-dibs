@@ -143,7 +143,6 @@ RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar; \
 RUN apk add --no-cache \
         ca-certificates \
         libaio \
-        libc6-compat \
         libnsl \
         unzip \
         wget; \
@@ -156,11 +155,7 @@ RUN apk add --no-cache \
     ln -s ${ORACLE_BASE}/libclntsh.so.21.1 /usr/lib/libclntsh.so; \
     ln -s ${ORACLE_BASE}/libocci.so.21.1 /usr/lib/libocci.so; \
     ln -s ${ORACLE_BASE}/libociicus.so /usr/lib/libociicus.so; \
-    ln -s ${ORACLE_BASE}/libnnz21.so /usr/lib/libnnz21.so; \
-    ln -s /usr/lib/libnsl.so.3 /usr/lib/libnsl.so.2; \
-    ln -s /usr/lib/libnsl.so.3 /usr/lib/libnsl.so.1; \
-    ln -s /lib/libc.so.6 /usr/lib/libresolv.so.2; \
-    ln -s /lib64/ld-linux-x86-64.so.2 /usr/lib/ld-linux-x86-64.so.2
+    ln -s ${ORACLE_BASE}/libnnz21.so /usr/lib/libnnz21.so
 
 # Install tzdata
 RUN apk add --no-cache tzdata \
