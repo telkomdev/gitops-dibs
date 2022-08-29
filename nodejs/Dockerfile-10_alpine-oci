@@ -1,0 +1,172 @@
+FROM alpine:3.16
+
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
+LABEL io.k8s.description="Alpine (3.16) OCI Node.js 10"
+LABEL io.k8s.display-name="Alpine (3.16) OCI Node.js 10"
+LABEL io.openshift.non-scalable="false"
+LABEL io.openshift.tags="runner,builder,alpine,nodejs,oracle"
+LABEL summary="Virtual Machine (VM) like container platform OCI with Node.js 10"
+LABEL vendor="Alpine"
+LABEL release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta"
+
+ENV NODE_VERSION="10.24.1" \
+    YARN_VERSION="1.22.5" \
+    GLIBC_VERSION="2.35-r0" \
+    INSTANT_CLIENT_VERSION="21.7.0" \
+    PATH="/opt/oracle/instantclient:${PATH}" \
+    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
+    ORACLE_BASE="/opt/oracle/instantclient" \
+    TNS_ADMIN="/opt/oracle/instantclient" \
+    ORACLE_HOME="/opt/oracle/instantclient"
+
+WORKDIR /usr/src/app
+
+# Install glibc
+RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download"; \
+    ALPINE_GLIBC_BASE_PACKAGE_FILENAME="glibc-${GLIBC_VERSION}.apk"; \
+    ALPINE_GLIBC_BIN_PACKAGE_FILENAME="glibc-bin-${GLIBC_VERSION}.apk"; \
+    ALPINE_GLIBC_I18N_PACKAGE_FILENAME="glibc-i18n-${GLIBC_VERSION}.apk"; \
+    apk add --no-cache --virtual=.build-dependencies \
+        wget \
+        ca-certificates; \
+    echo \
+        "-----BEGIN PUBLIC KEY-----\
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApZ2u1KJKUu/fW4A25y9m\
+        y70AGEa/J3Wi5ibNVGNn1gT1r0VfgeWd0pUybS4UmcHdiNzxJPgoWQhV2SSW1JYu\
+        tOqKZF5QSN6X937PTUpNBjUvLtTQ1ve1fp39uf/lEXPpFpOPL88LKnDBgbh7wkCp\
+        m2KzLVGChf83MS0ShL6G9EQIAUxLm99VpgRjwqTQ/KfzGtpke1wqws4au0Ab4qPY\
+        KXvMLSPLUp7cfulWvhmZSegr5AdhNw5KNizPqCJT8ZrGvgHypXyiFvvAH5YRtSsc\
+        Zvo9GI2e2MaZyo9/lvb+LbLEJZKEQckqRj4P26gmASrZEPStwc+yqy1ShHLA0j6m\
+        1QIDAQAB\
+        -----END PUBLIC KEY-----" | sed 's/   */\n/g' > "/etc/apk/keys/sgerrand.rsa.pub"; \
+    wget \
+        "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" \
+        "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" \
+        "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}"; \
+    apk add --no-cache \
+        "${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" \
+        "${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" \
+        "${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}"; \
+    rm -f "/etc/apk/keys/sgerrand.rsa.pub"; \
+    (/usr/glibc-compat/bin/localedef --force --inputfile POSIX --charmap UTF-8 "$LANG" || true); \
+    echo "export LANG=${LANG}" > /etc/profile.d/locale.sh; \
+    apk del glibc-i18n; \
+    rm -f "/root/.wget-hsts"; \
+    apk del .build-dependencies; \
+    rm \
+        "${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" \
+        "${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" \
+        "${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}"
+
+# Install Node.js
+RUN apk add --no-cache libstdc++; \
+    apk add --no-cache --virtual .build-deps curl; \
+    ARCH=; \
+    alpineArch="$(apk --print-arch)"; \
+    case "${alpineArch##*-}" in \
+      x86_64) \
+        ARCH='x64'; \
+        CHECKSUM="138eed35daca02bbc01cae161e13604b1b71139e9552d4cb9fe3aad742ce94ec"; \
+        ;; \
+      *) \
+        ;; \
+    esac; \
+    if [ -n "${CHECKSUM}" ]; then \
+      set -eu; \
+      curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${ARCH}-musl.tar.xz"; \
+      echo "${CHECKSUM}  node-v${NODE_VERSION}-linux-${ARCH}-musl.tar.xz" | sha256sum -c -; \
+      tar -xJf "node-v${NODE_VERSION}-linux-${ARCH}-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner; \
+      ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
+    else \
+      echo "Building from source"; \
+      apk add --no-cache --virtual .build-deps-full binutils-gold g++ gcc gnupg libgcc linux-headers make python3; \
+      for key in \
+        4ED778F539E3634C779C87C6D7062848A1AB005C \
+        141F07595B7B3FFE74309A937405533BE57C7D57 \
+        94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
+        74F12602B6F1C4E913FAA37AD3A89613643B6201 \
+        71DCFD284A79C3B38668286BC97EC7A07EDE3FC1 \
+        61FC681DFB92A079F1685E77973F295594EC4689 \
+        8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
+        C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
+        890C08DB8579162FEE0DF9DB8BEAB4DFCF555EF4 \
+        C82FA3AE1CBEDC6BE46B9360C43CEC45C17AB93C \
+        DD8F2338BAE7501E3DD5AC78C273792F7D83545D \
+        A48C2BEE680E841632CD4E44F07496B3EB3C1762 \
+        108F52B48DB57BB0CC439B2997B01419BD92F80A \
+        B9E2F5981AA6E0CD28160D9FF13993A75599653C; \
+      do \
+        gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "${key}" || gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${key}"; \
+      done; \
+      curl -fsSLO --compressed "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.tar.xz"; \
+      curl -fsSLO --compressed "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt.asc"; \
+      gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc; \
+      grep " node-v${NODE_VERSION}.tar.xz\$" SHASUMS256.txt | sha256sum -c -; \
+      tar -xf "node-v${NODE_VERSION}.tar.xz"; \
+      cd "node-v${NODE_VERSION}"; \
+      ./configure; \
+      make -j$(getconf _NPROCESSORS_ONLN) V=; \
+      make install; \
+      apk del .build-deps-full; \
+      cd ..; \
+      rm -Rf "node-v${NODE_VERSION}"; \
+      rm "node-v${NODE_VERSION}.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt; \
+    fi; \
+    rm -f "node-v${NODE_VERSION}-linux-${ARCH}-musl.tar.xz"; \
+    apk del .build-deps; \
+    node --version; \
+    npm --version
+
+# Install yarn
+RUN apk add --no-cache --virtual .build-deps-yarn curl gnupg tar; \
+    for key in \
+      6A010C5166006599AA17F08146C2130DFD2497F5; \
+    do \
+      gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "${key}" || gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "${key}"; \
+    done; \
+    curl -fsSLO --compressed "https://yarnpkg.com/downloads/${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz"; \
+    curl -fsSLO --compressed "https://yarnpkg.com/downloads/${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz.asc"; \
+    gpg --batch --verify yarn-v${YARN_VERSION}.tar.gz.asc yarn-v${YARN_VERSION}.tar.gz; \
+    mkdir -p /opt; \
+    tar -xzf yarn-v${YARN_VERSION}.tar.gz -C /opt/; \
+    ln -s /opt/yarn-v${YARN_VERSION}/bin/yarn /usr/local/bin/yarn; \
+    ln -s /opt/yarn-v${YARN_VERSION}/bin/yarnpkg /usr/local/bin/yarnpkg; \
+    rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v${YARN_VERSION}.tar.gz; \
+    apk del .build-deps-yarn; \
+    yarn --version
+
+# Install instantclient
+RUN apk add --no-cache \
+        ca-certificates \
+        libaio \
+        libc6-compat \
+        libnsl \
+        unzip \
+        wget; \
+    wget -O instantclient.zip "https://download.oracle.com/otn_software/linux/instantclient/217000/instantclient-basiclite-linux.x64-${INSTANT_CLIENT_VERSION}.0.0dbru.zip"; \
+    unzip instantclient.zip; \
+    rm -rf instantclient.zip; \
+    mkdir -p ${ORACLE_BASE}; \
+    mv instantclient_*/* ${ORACLE_BASE}/; \
+    rm -rf instantclient_*; \
+    ln -s ${ORACLE_BASE}/libclntsh.so.21.1 /usr/lib/libclntsh.so; \
+    ln -s ${ORACLE_BASE}/libocci.so.21.1 /usr/lib/libocci.so; \
+    ln -s ${ORACLE_BASE}/libociicus.so /usr/lib/libociicus.so; \
+    ln -s ${ORACLE_BASE}/libnnz21.so /usr/lib/libnnz21.so; \
+    ln -s /usr/lib/libnsl.so.3 /usr/lib/libnsl.so.2; \
+    ln -s /usr/lib/libnsl.so.3 /usr/lib/libnsl.so.1; \
+    ln -s /lib/libc.so.6 /usr/lib/libresolv.so.2; \
+    ln -s /lib64/ld-linux-x86-64.so.2 /usr/lib/ld-linux-x86-64.so.2
+
+# Install tzdata
+RUN apk add --no-cache tzdata \
+      && rm -rf /var/cache/apk/*
+
+COPY docker-entrypoint.sh /usr/local/bin
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+
