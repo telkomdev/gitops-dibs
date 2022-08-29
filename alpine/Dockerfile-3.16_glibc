@@ -39,6 +39,12 @@ RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases
         "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" \
         "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" \
         "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}"; \
+    sha256_base="02fe2d91f53eab93c64d74485b80db575cfb4de40bc0d12bf55839fbe16cb041"; \
+    sha256_bin="720b870b51f64324e318370eda080b5ee99332c36b80be975968136e06c1af93"; \
+    sha256_i18n="171062071e7db01e4daefc2acdb798da5ed410df1078226d755c08c46c124063"; \
+    echo "${sha256_base}  ${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" | sha256sum -c -; \
+    echo "${sha256_bin}  ${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" | sha256sum -c -; \
+    echo "${sha256_i18n}  ${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}" | sha256sum -c -; \
     apk add --no-cache \
         "${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" \
         "${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" \
