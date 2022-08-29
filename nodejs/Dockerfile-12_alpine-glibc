@@ -1,13 +1,13 @@
 FROM alpine:3.16
 
-LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>"
-LABEL io.k8s.description="Alpine (3.1) GLIBC Node.js 12"
-LABEL io.k8s.display-name="Alpine (3.16) GLIBC Node.js 12"
-LABEL io.openshift.non-scalable="false"
-LABEL io.openshift.tags="runner,builder,alpine,glibc,nodejs"
-LABEL summary="Virtual Machine (VM) like container platform GLIBC with Node.js 12"
-LABEL vendor="Alpine"
-LABEL release="1"
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Alpine (3.1) GLIBC Node.js 12" \
+      io.k8s.display-name="Alpine (3.16) GLIBC Node.js 12" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="runner,builder,alpine,glibc,nodejs" \
+      summary="Virtual Machine (VM) like container platform GLIBC with Node.js 12" \
+      vendor="Alpine" \
+      release="1"
 
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
