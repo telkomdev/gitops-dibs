@@ -65,5 +65,6 @@ mkdir -p /vault/file; \
 mkdir -p /vault/config; \
 chown -R vault:vault /vault; \
 vault --version || exit 1; \
+cd /usr/src/app; \
 rm -f install_vault_alpine.sh
 
