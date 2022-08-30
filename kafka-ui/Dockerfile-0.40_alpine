@@ -1,0 +1,34 @@
+FROM alpine:3.16
+
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Alpine (3.16) Kafka-UI" \
+      io.k8s.display-name="Alpine (3.16) Kafka-UI" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="runner,alpine,kafka" \
+      summary="Virtual Machine (VM) like container platform with Kafka-UI" \
+      vendor="Alpine" \
+      release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta"
+
+WORKDIR /usr/src/app
+
+# Install kafka-ui
+ENV KAFKA_UI_VERSION="0.4.0" \
+    LOG4J_FORMAT_MSG_NO_LOOKUPS="true" \
+    JAVA_OPTS="-Dlog4j2.formatMsgNoLookups=true"
+COPY install_kafkaui_alpine.sh .
+RUN /bin/sh install_kafkaui_alpine.sh
+
+# Custom configuration for Alpine Linux
+COPY configure_alpine.sh .
+RUN /bin/sh configure_alpine.sh
+
+USER nobody:nobody
+
+EXPOSE 8080
+
+CMD ["/bin/sh", "-c", "java ${JAVA_OPTS} -jar kafka-ui-api.jar"]
+
