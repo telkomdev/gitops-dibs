@@ -20,5 +20,5 @@ WORKDIR /usr/src/app
 COPY configure_debian.sh .
 RUN /bin/sh configure_debian.sh
 
-USER nobody:nobody
+USER nobody:nogroup
 
