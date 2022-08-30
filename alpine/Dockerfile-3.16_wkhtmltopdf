@@ -34,3 +34,5 @@ COPY --from=builder /lib/libwkhtmltox* /bin/
 COPY configure_alpine.sh .
 RUN /bin/sh configure_alpine.sh
 
+USER nobody:nobody
+
