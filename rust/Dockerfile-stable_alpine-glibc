@@ -21,8 +21,9 @@ COPY install_glibc_alpine.sh .
 RUN /bin/sh install_glibc_alpine.sh
 
 # Install rust
-ENV RUSTUP_HOME=/opt/rust \
-    CARGO_HOME=/opt/rust/.cargo
+ENV RUSTUP_HOME="/opt/rust" \
+    CARGO_HOME="/opt/rust/.cargo" \
+    PATH="/opt/rust/.cargo/bin:${PATH}"
 COPY install_rust_alpine.sh .
 RUN /bin/sh install_rust_alpine.sh
 
