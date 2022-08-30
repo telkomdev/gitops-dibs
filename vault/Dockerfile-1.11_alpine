@@ -1,0 +1,36 @@
+FROM alpine:3.16
+
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Alpine (3.16) Vault 1.11" \
+      io.k8s.display-name="Alpine (3.16) Vault 1.11" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="runner,alpine,security,vault" \
+      summary="Virtual Machine (VM) like container platform with Vault 1.11" \
+      vendor="Alpine" \
+      release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta"
+
+WORKDIR /usr/src/app
+
+# Install vault
+ENV VAULT_VERSION="1.11.1"
+COPY install_vault_alpine.sh .
+RUN /bin/sh install_vault_alpine.sh
+VOLUME [/vault/logs]
+VOLUME [/vault/file]
+
+# Custom configuration for Alpine Linux
+COPY configure_alpine.sh .
+RUN /bin/sh configure_alpine.sh
+
+EXPOSE 8200
+
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD ["server", "-dev"]
+
