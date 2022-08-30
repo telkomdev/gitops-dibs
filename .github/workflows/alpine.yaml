@@ -1,4 +1,4 @@
-name: Build and publish Alpine
+name: Build Alpine
 on:
   workflow_dispatch:
     inputs:
@@ -27,7 +27,7 @@ on:
 jobs:
   build_specific:
     if: ${{ inputs.image_variant != 'all' }}
-    name: "Build ${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}"
+    name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -39,7 +39,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: "Build and push ${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}"
+      - name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}"
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
@@ -48,7 +48,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}
   build_alpine_base:
     if: ${{ inputs.image_variant == 'all' }}
-    name: "Build ${{ inputs.image_name }}:${{ inputs.image_version }}-base"
+    name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-base"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -60,7 +60,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: "Build and push ${{ inputs.image_name }}:${{ inputs.image_version }}-base"
+      - name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-base"
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
@@ -69,7 +69,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-base
   build_alpine_glibc:
     if: ${{ inputs.image_variant == 'all' }}
-    name: "Build ${{ inputs.image_name }}:${{ inputs.image_version }}-glibc"
+    name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-glibc"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -81,7 +81,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: "Build and push ${{ inputs.image_name }}:${{ inputs.image_version }}-glibc"
+      - name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-glibc"
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
@@ -90,7 +90,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-glibc
   build_alpine_oci:
     if: ${{ inputs.image_variant == 'all' }}
-    name: "Build ${{ inputs.image_name }}:${{ inputs.image_version }}-oci"
+    name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-oci"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -102,7 +102,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: "Build and push ${{ inputs.image_name }}:${{ inputs.image_version }}-oci"
+      - name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-oci"
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
@@ -111,7 +111,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-oci
   build_alpine_wkhtmltopdf:
     if: ${{ inputs.image_variant == 'all' }}
-    name: "Build ${{ inputs.image_name }}:${{ inputs.image_version }}-wkhtmltopdf"
+    name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-wkhtmltopdf"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -123,7 +123,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: "Build and push ${{ inputs.image_name }}:${{ inputs.image_version }}-wkhtmltopdf"
+      - name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-wkhtmltopdf"
         uses: docker/build-push-action@v3
         with:
           context: ${{ inputs.image_name }}
