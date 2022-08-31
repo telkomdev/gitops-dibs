@@ -21,3 +21,5 @@ RUN /bin/sh configure_alpine.sh
 
 USER root:root
 
+ENTRYPOINT ["tail", "-f", "/dev/null"]
+
