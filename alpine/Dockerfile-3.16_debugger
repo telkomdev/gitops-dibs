@@ -15,11 +15,17 @@ ENV LANG="C.UTF-8" \
 
 WORKDIR /usr/src/app
 
+RUN addgroup -S sudo; \
+    adduser -s /bin/sh -D -G sudo user; \
+    apk add --no-cache sudo; \
+    sed -i 's/# %sudo/%sudo/' /etc/sudoers; \
+    sed -i 's/user:!/user:$6$nvznDih6zoZCta5A$VOUQNu6KWNi1d84MS5ziaZwWey53JSIC9PGy\/451xh3tbCdncL4Y9aBeLbmmGP19\/fw8JIfbKctLU1J0MEFIl0/g' /etc/shadow
+
 # Custom configuration for Alpine Linux
 COPY configure_alpine.sh .
 RUN /bin/sh configure_alpine.sh
 
-USER root:root
+USER user
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
