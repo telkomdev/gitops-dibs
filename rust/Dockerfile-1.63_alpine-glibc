@@ -1,11 +1,11 @@
 FROM alpine:3.16
 
 LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
-      io.k8s.description="Alpine (3.16) Rust stable" \
-      io.k8s.display-name="Alpine (3.16) Rust stable" \
+      io.k8s.description="Alpine (3.16) GLIBC Rust 1.63" \
+      io.k8s.display-name="Alpine (3.16) GLIBC Rust 1.63" \
       io.openshift.non-scalable="false" \
       io.openshift.tags="builder,alpine,rust" \
-      summary="Virtual Machine (VM) like container platform with Rust Stable" \
+      summary="Virtual Machine (VM) like container platform GLIBC with Rust 1.63" \
       vendor="Alpine" \
       release="1"
 
@@ -15,8 +15,14 @@ ENV LANG="C.UTF-8" \
 
 WORKDIR /usr/src/app
 
+# Install glibc
+ENV GLIBC_VERSION="2.35-r0"
+COPY install_glibc_alpine.sh .
+RUN /bin/sh install_glibc_alpine.sh
+
 # Install rust
-ENV RUSTUP_HOME="/opt/rust" \
+ENV RUST_VERSION="1.63.0" \
+    RUSTUP_HOME="/opt/rust" \
     CARGO_HOME="/opt/rust/.cargo" \
     PATH="/opt/rust/.cargo/bin:${PATH}"
 COPY install_rust_alpine.sh .
@@ -25,3 +31,4 @@ RUN /bin/sh install_rust_alpine.sh
 # Custom configuration for Alpine Linux
 COPY configure_alpine.sh .
 RUN /bin/sh configure_alpine.sh
+
