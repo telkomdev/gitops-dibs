@@ -12,7 +12,8 @@ LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.i
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
     TZ="Asia/Jakarta" \
-    OC_VERSION="3.7.2"
+    OC_VERSION="3.7.2" \
+    HELM_VERSION="3.9.4"
 
 WORKDIR /usr/src/app
 
@@ -29,15 +30,44 @@ RUN addgroup -S sudo; \
         rsync \
         sudo; \
     sed -i 's/# %sudo/%sudo/' /etc/sudoers; \
-    sed -i 's/user:!/user:$6$nvznDih6zoZCta5A$VOUQNu6KWNi1d84MS5ziaZwWey53JSIC9PGy\/451xh3tbCdncL4Y9aBeLbmmGP19\/fw8JIfbKctLU1J0MEFIl0/g' /etc/shadow; \
-    curl -Lo oc.tar.gz https://github.com/openshift/origin/releases/download/v${OC_VERSION}/openshift-origin-client-tools-v${OC_VERSION}-282e43f-linux-64bit.tar.gz; \
+    sed -i 's/user:!/user:$6$nvznDih6zoZCta5A$VOUQNu6KWNi1d84MS5ziaZwWey53JSIC9PGy\/451xh3tbCdncL4Y9aBeLbmmGP19\/fw8JIfbKctLU1J0MEFIl0/g' /etc/shadow
+RUN curl -Lo oc.tar.gz https://github.com/openshift/origin/releases/download/v${OC_VERSION}/openshift-origin-client-tools-v${OC_VERSION}-282e43f-linux-64bit.tar.gz; \
     sha256="abc89f025524eb205e433622e59843b09d2304cc913534c4ed8af627da238624"; \
     echo "${sha256}  oc.tar.gz" | sha256sum -c - || exit 1; \
     tar -xzpf oc.tar.gz; \
     cp openshift-origin-client-tools-v${OC_VERSION}-*/oc /usr/local/bin; \
+    oc version || exit 1; \
     rm -rf \
         oc.tar.gz \
         openshift-origin-client-tools-v${OC_VERSION}-*
+RUN case $(uname -m) in \
+        x86_64) \
+          ARCH=amd64; \
+          ;; \
+        armv7l) \
+          ARCH=arm; \
+          ;; \
+        aarch64) \
+          ARCH=arm64; \
+          ;; \
+        ppc64le) \
+          ARCH=ppc64le; \
+          ;; \
+        s390x) \
+          ARCH=s390x; \
+          ;; \
+        *) \
+          echo "un-supported arch, exit ..."; \
+          exit 1; \
+          ;; \
+    esac; \
+    apk add --update --no-cache \
+        git; \
+    curl -Lo https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz -O - | tar -xz; \
+    mv linux-${ARCH}/helm /usr/local/bin/helm; \
+    chmod +x /usr/local/bin/helm; \
+    helm version || exit 1; \
+    rm -rf linux-${ARCH}
 
 # Custom configuration for Alpine Linux
 COPY configure_alpine.sh .
