@@ -63,7 +63,7 @@ RUN case $(uname -m) in \
     esac; \
     apk add --update --no-cache \
         git; \
-    curl -Lo https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz -O - | tar -xz; \
+    curl -Lo - https://get.helm.sh/helm-v${HELM_VERSION}-linux-${ARCH}.tar.gz | tar -xz; \
     mv linux-${ARCH}/helm /usr/local/bin/helm; \
     chmod +x /usr/local/bin/helm; \
     helm version || exit 1; \
