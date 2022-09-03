@@ -27,6 +27,7 @@ RUN addgroup -S sudo; \
     apk add --no-cache \
         ca-certificates \
         curl \
+        nano \
         rsync \
         sudo; \
     sed -i 's/# %sudo/%sudo/' /etc/sudoers; \
