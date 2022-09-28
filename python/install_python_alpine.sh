@@ -69,7 +69,7 @@ export PYTHON_GET_PIP_SHA256=5aefe6ade911d997af080b315ebcb7f882212d070465df544e1
 wget -O get-pip.py "${PYTHON_GET_PIP_URL}"; \
 echo "${PYTHON_GET_PIP_SHA256} *get-pip.py" | sha256sum -c -; \
 export PYTHONDONTWRITEBYTECODE=1; \
-python get-pip.py \
+python3 get-pip.py \
     --disable-pip-version-check \
     --no-cache-dir \
     --no-compile "pip==${PYTHON_PIP_VERSION}" "setuptools==${PYTHON_SETUPTOOLS_VERSION}"; \
