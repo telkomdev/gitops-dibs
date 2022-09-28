@@ -9,10 +9,10 @@ on:
       image_version:
         description: Docker image version
         required: true
-        default: 3.10
+        default: "3.10"
         type: choice
         options:
-          - 3.10
+          - "3.10"
       image_variant:
         description: Docker image variant
         required: true
