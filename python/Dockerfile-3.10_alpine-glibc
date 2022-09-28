@@ -1,0 +1,33 @@
+FROM alpine:3.16
+
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Alpine (3.16) GLIBC Python 3.10" \
+      io.k8s.display-name="Alpine (3.16) GLIBC Python 3.10" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="runner,builder,alpine,glibc,python" \
+      summary="Virtual Machine (VM) like container platform GLIBC with Python 3.10" \
+      vendor="Alpine" \
+      release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta"
+
+WORKDIR /usr/src/app
+
+# Install glibc
+ENV GLIBC_VERSION="2.35-r0"
+COPY install_glibc_alpine.sh .
+RUN /bin/sh install_glibc_alpine.sh
+
+# Install Python
+ENV PYTHON_VERSION="3.10.7" \
+    PYTHON_PIP_VERSION=22.2.2 \
+    PYTHON_SETUPTOOLS_VERSION=63.2.0
+COPY install_python_alpine.sh .
+RUN /bin/sh install_python_alpine.sh
+
+# Custom configuration for Alpine Linux
+COPY configure_alpine.sh .
+RUN /bin/sh configure_alpine.sh
+
