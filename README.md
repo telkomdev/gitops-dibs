@@ -1,4 +1,7 @@
 # GitOps Docker image build system (DIBS)
+[![GitHub license](https://img.shields.io/github/license/telkomdev/gitops-dibs.svg)](https://github.com/telkomdev/gitops-dibs/blob/master/LICENSE)
+[![made-with-bash](https://img.shields.io/badge/Made%20with-Bash-1f425f.svg)](https://www.gnu.org/software/bash/)
+
 The purpose of this build system is to simplify the process of building a docker image and make it easier for everyone to contribute
 
 ## Project structure
