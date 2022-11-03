@@ -13,16 +13,6 @@ ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8" \
     TZ="Asia/Jakarta"
 
-ENV NODE_VERSION="18.8.0" \
-    YARN_VERSION="1.22.19" \
-    GLIBC_VERSION="2.35-r0" \
-    INSTANT_CLIENT_VERSION="21.7.0" \
-    PATH="/opt/oracle/instantclient:${PATH}" \
-    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
-    ORACLE_BASE="/opt/oracle/instantclient" \
-    TNS_ADMIN="/opt/oracle/instantclient" \
-    ORACLE_HOME="/opt/oracle/instantclient"
-
 WORKDIR /usr/src/app
 
 # Install glibc
@@ -41,7 +31,7 @@ COPY install_oci_alpine.sh .
 RUN /bin/sh install_oci_alpine.sh
 
 # Install Node.js
-ENV NODE_VERSION="18.8.0"
+ENV NODE_VERSION="18.12.0"
 COPY install_nodejs_alpine.sh .
 RUN /bin/sh install_nodejs_alpine.sh
 

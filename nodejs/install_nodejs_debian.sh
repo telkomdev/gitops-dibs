@@ -62,7 +62,7 @@ apt-mark auto '.*' > /dev/null; \
 find /usr/local -type f -executable -exec ldd '{}' ';' | awk '/=>/ { print $(NF-1) }' | sort -u | xargs -r dpkg-query --search | cut -d: -f1 | sort -u | xargs -r apt-mark manual; \
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
-node --version; \
+node --version ||exit 1; \
 npm --version || exit 1; \
 rm -f install_nodejs_debian.sh
 

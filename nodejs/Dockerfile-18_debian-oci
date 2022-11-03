@@ -27,7 +27,7 @@ COPY install_oci_debian.sh .
 RUN /bin/sh install_oci_debian.sh
 
 # Install Node.js
-ENV NODE_VERSION="18.8.0"
+ENV NODE_VERSION="18.12.0"
 COPY install_nodejs_debian.sh .
 RUN /bin/sh install_nodejs_debian.sh
 

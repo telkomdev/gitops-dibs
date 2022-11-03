@@ -20,7 +20,7 @@ case "${alpineArch##*-}" in \
         CHECKSUM="6c94de8608fcd5b992f5f804c2d03bc3a7f422426760b1b80ea4ced486a694fe"; \
         ;; \
       '18') \
-        CHECKSUM="0db707b81e1ff47347e4ad11ec60b6da17828d9b2d54f60d24af1caf9ef641e8"; \
+        CHECKSUM="1ed310f338017dbe53300342457c3e7c3701e9efa7697f51b90be785476853d7"; \
         ;; \
     esac; \
     ;; \
@@ -72,7 +72,7 @@ else \
 fi; \
 rm -f "node-v${NODE_VERSION}-linux-${ARCH}-musl.tar.xz"; \
 apk del .build-deps; \
-node --version; \
+node --version || exit 1; \
 npm --version || exit 1; \
 rm -f install_nodejs_alpine.sh
 
