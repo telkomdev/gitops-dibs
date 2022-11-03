@@ -55,7 +55,7 @@ if [ -z "${url}" ]; then \
       sha256='a1a48b23afb206f95e7bbaa9b898d965f90826f6f1d1fc0c1d784ada0cd300fd'; \
       ;; \
     '1.18') \
-      sha256='9920d3306a1ac536cdd2c796d6cb3c54bc559c226fc3cc39c32f1e0bd7f50d2a'; \
+      sha256='1f79802305015479e77d8c641530bc54ec994657d5c5271e0172eb7118346a12'; \
       ;; \
     '1.19') \
       sha256='18ac263e39210bcf68d85f4370e97fb1734166995a1f63fb38b4f6e07d90d212'; \

@@ -16,7 +16,7 @@ ENV LANG="C.UTF-8" \
 WORKDIR /usr/src/app
 
 # Install golang
-ENV GOLANG_VERSION="1.18.5" \
+ENV GOLANG_VERSION="1.18.8" \
     GOPATH="/go" \
     PATH=/go/bin:/usr/local/go/bin:${PATH}
 COPY install_golang_alpine.sh .

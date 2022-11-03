@@ -21,7 +21,7 @@ COPY install_glibc_alpine.sh .
 RUN /bin/sh install_glibc_alpine.sh
 
 # Install golang
-ENV GOLANG_VERSION="1.18.5" \
+ENV GOLANG_VERSION="1.18.8" \
     GOPATH="/go" \
     PATH=/go/bin:/usr/local/go/bin:${PATH}
 COPY install_golang_alpine.sh .
