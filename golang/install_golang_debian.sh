@@ -47,7 +47,7 @@ case "${arch}" in \
         sha256='9e5de37f9c49942c601b191ac5fba404b868bfc21d446d6960acc12283d6e5f2'; \
         ;; \
       '1.19') \
-        sha256='464b6b66591f6cf055bc5df90a9750bf5fbc9d038722bb84a9d56a2bea974be6'; \
+        sha256='74b9640724fd4e6bb0ed2a1bc44ae813a03f1e72a4c76253e2d5c015494430ba'; \
         ;; \
     esac; \
     ;; \
@@ -80,7 +80,7 @@ if [ -z "${url}" ]; then \
       sha256='9920d3306a1ac536cdd2c796d6cb3c54bc559c226fc3cc39c32f1e0bd7f50d2a'; \
       ;; \
     '1.19') \
-      sha256='9419cc70dc5a2523f29a77053cafff658ed21ef3561d9b6b020280ebceab28b9'; \
+      sha256='18ac263e39210bcf68d85f4370e97fb1734166995a1f63fb38b4f6e07d90d212'; \
       ;; \
   esac; \
   echo >&2; \
