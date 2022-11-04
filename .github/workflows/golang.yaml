@@ -9,7 +9,7 @@ on:
       image_version:
         description: Docker image version
         required: true
-        default: 1.18
+        default: 1.19
         type: choice
         options:
           - 1.19
