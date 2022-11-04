@@ -7,7 +7,7 @@ alpineArch="$(apk --print-arch)"; \
 case "${alpineArch##*-}" in \
   x86_64) \
     SOURCE="https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"; \
-    case $(echo ${GOLANG_VERSION} | awk -F[\.] '{print $1"."$2}') in \
+    case $(echo "${TRIVY_VERSION}" | awk -F[\.] '{print $1"."$2}') in \
       '0.31') \
         CHECKSUM="aef718fd3e6e0714308f35ae567d6442f4ddd351e900d083d4e6e97a7368df73"; \
         ;; \
