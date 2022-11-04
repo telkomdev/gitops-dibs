@@ -23,7 +23,7 @@ COPY install_glibc_alpine.sh .
 RUN /bin/sh install_glibc_alpine.sh
 
 RUN addgroup -S sudo; \
-    adduser -s /bin/sh -D -G sudo user; \
+    adduser -s /bin/bash -D -u 1001 -G sudo admin; \
     apk add --no-cache \
         ca-certificates \
         curl \
@@ -31,7 +31,7 @@ RUN addgroup -S sudo; \
         rsync \
         sudo; \
     sed -i 's/# %sudo/%sudo/' /etc/sudoers; \
-    sed -i 's/user:!/user:$6$nvznDih6zoZCta5A$VOUQNu6KWNi1d84MS5ziaZwWey53JSIC9PGy\/451xh3tbCdncL4Y9aBeLbmmGP19\/fw8JIfbKctLU1J0MEFIl0/g' /etc/shadow
+    sed -i 's/admin:!/admin:$6$nvznDih6zoZCta5A$VOUQNu6KWNi1d84MS5ziaZwWey53JSIC9PGy\/451xh3tbCdncL4Y9aBeLbmmGP19\/fw8JIfbKctLU1J0MEFIl0/g' /etc/shadow
 RUN curl -Lo oc.tar.gz https://github.com/openshift/origin/releases/download/v${OC_VERSION}/openshift-origin-client-tools-v${OC_VERSION}-282e43f-linux-64bit.tar.gz; \
     sha256="abc89f025524eb205e433622e59843b09d2304cc913534c4ed8af627da238624"; \
     echo "${sha256}  oc.tar.gz" | sha256sum -c - || exit 1; \
@@ -74,7 +74,7 @@ RUN case $(uname -m) in \
 COPY configure_alpine.sh .
 RUN /bin/sh configure_alpine.sh
 
-USER user
+USER admin
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]
 
