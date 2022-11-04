@@ -1,5 +1,7 @@
 set -ex; \
-apk add --no-cache tzdata; \
+apk add --no-cache \
+    bash \
+    tzdata; \
 cd /usr/src/app; \
 rm -rf \
     /var/cache/apk/* \
