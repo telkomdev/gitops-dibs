@@ -17,7 +17,7 @@ case "${alpineArch##*-}" in \
         CHECKSUM="b7d90dae42a75531ff4b29f3c843927c63677f7dbd30dda299ac3d3da65f828b"; \
         ;; \
       '16') \
-        CHECKSUM="6c94de8608fcd5b992f5f804c2d03bc3a7f422426760b1b80ea4ced486a694fe"; \
+        CHECKSUM="e6b9c39f85eed0f625b570bbb3019db8761ab78a935eb44f20865ab35c4eec6c"; \
         ;; \
       '18') \
         CHECKSUM="1ed310f338017dbe53300342457c3e7c3701e9efa7697f51b90be785476853d7"; \

@@ -17,7 +17,7 @@ ENV LANG="C.UTF-8" \
 WORKDIR /usr/src/app
 
 # Install Node.js
-ENV NODE_VERSION="16.17.0"
+ENV NODE_VERSION="16.18.0"
 COPY install_nodejs_debian.sh .
 RUN /bin/sh install_nodejs_debian.sh
 

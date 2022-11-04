@@ -21,7 +21,7 @@ COPY install_glibc_alpine.sh .
 RUN /bin/sh install_glibc_alpine.sh
 
 # Install Node.js
-ENV NODE_VERSION="16.17.0"
+ENV NODE_VERSION="16.18.0"
 COPY install_nodejs_alpine.sh .
 RUN /bin/sh install_nodejs_alpine.sh
 
