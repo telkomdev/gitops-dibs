@@ -1,0 +1,67 @@
+name: Build Nginx
+on:
+  workflow_dispatch:
+    inputs:
+      image_name:
+        description: Docker image name
+        required: true
+        default: nginx
+      image_version:
+        description: Docker image version
+        required: true
+        default: 1.22
+        type: choice
+        options:
+          - 1.22
+      image_variant:
+        description: Docker image variant
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - alpine
+jobs:
+  build_specific:
+    if: ${{ inputs.image_variant != 'all' }}
+    name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}"
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.image_name }}
+          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_${{ inputs.image_variant }}
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}
+  build_nginx_alpine:
+    if: ${{ inputs.image_variant == 'all' }}
+    name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-alpine"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-alpine"
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ inputs.image_name }}
+          file: ${{ inputs.image_name }}/Dockerfile-${{ inputs.image_version }}_alpine
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-alpine
+

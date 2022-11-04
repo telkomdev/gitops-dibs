@@ -1,0 +1,38 @@
+FROM alpine:3.16
+
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Alpine (3.16) nginx 1.22" \
+      io.k8s.display-name="Alpine (3.16) nginx 1.22" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="runner,alpine,nginx" \
+      summary="Virtual Machine (VM) like container platform with Nginx 1.22" \
+      vendor="Alpine" \
+      release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta"
+
+WORKDIR /usr/src/app
+
+# Install nginx
+ENV NGINX_VERSION="1.22.1" \
+    NJS_VERSION="0.7.7" \
+    PKG_RELEASE="1"
+COPY install_nginx_alpine.sh .
+RUN /bin/sh install_nginx_alpine.sh
+COPY docker-entrypoint.sh /
+COPY 10-listen-on-ipv6-by-default.sh /docker-entrypoint.d/
+COPY 20-envsubst-on-templates.sh /docker-entrypoint.d/
+COPY 30-tune-worker-processes.sh /docker-entrypoint.d/
+
+# Custom configuration for Alpine Linux
+COPY configure_alpine.sh .
+RUN /bin/sh configure_alpine.sh
+
+# nginx entrypoint
+ENTRYPOINT ["/docker-entrypoint.sh"]
+EXPOSE 80
+STOPSIGNAL SIGQUIT
+CMD ["nginx" "-g" "daemon off;"]
+
