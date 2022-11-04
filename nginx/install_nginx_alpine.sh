@@ -83,7 +83,7 @@ ln -sf /dev/stdout /var/log/nginx/access.log; \
 ln -sf /dev/stderr /var/log/nginx/error.log; \
 mkdir /docker-entrypoint.d; \
 nginx -v || exit 1; \
-sed -i 's/user /#user /g' /etc/nginx/nginx.conf; \
+sed -i 's/user  nginx;/#user  nginx;/g' /etc/nginx/nginx.conf; \
 sed -i 's/80;/8080;/g' /etc/nginx/conf.d/default.conf; \
 sed -i 's/127.0.0.1:80/127.0.0.1:8080/g' /etc/nginx/conf.d/default.conf; \
 chmod 666 /etc/nginx/conf.d/default.conf; \
