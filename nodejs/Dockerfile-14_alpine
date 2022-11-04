@@ -16,7 +16,7 @@ ENV LANG="C.UTF-8" \
 WORKDIR /usr/src/app
 
 # Install Node.js
-ENV NODE_VERSION="14.20.0"
+ENV NODE_VERSION="14.21.0"
 COPY install_nodejs_alpine.sh .
 RUN /bin/sh install_nodejs_alpine.sh
 
