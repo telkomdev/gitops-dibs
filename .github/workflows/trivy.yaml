@@ -13,6 +13,7 @@ on:
         type: choice
         options:
           - 0.31
+          - 0.34
       image_variant:
         description: Docker image variant
         required: true
