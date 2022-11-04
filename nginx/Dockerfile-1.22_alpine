@@ -32,7 +32,7 @@ RUN /bin/sh configure_alpine.sh
 
 # nginx entrypoint
 ENTRYPOINT ["/docker-entrypoint.sh"]
-EXPOSE 80
+EXPOSE 8080
 STOPSIGNAL SIGQUIT
 CMD ["nginx", "-g", "daemon off;"]
 
