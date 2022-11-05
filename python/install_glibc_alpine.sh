@@ -20,7 +20,7 @@ wget \
     "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" \
     "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" \
     "${ALPINE_GLIBC_BASE_URL}/${GLIBC_VERSION}/${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}"; \
-case $(echo "${GLIBC_VERSION}" | '{print $1"."$2}') in \
+case $(echo "${GLIBC_VERSION}" | awk -F[\.] '{print $1"."$2}' | awk -F[\-] '{print $1}') in \
   '2.34') \
     sha256_glibc_base="3ef4a8d71777b3ccdd540e18862d688e32aa1c7bc5a1c0170271a43d0e736486"; \
     sha256_glibc_bin="cc631135f481644ce74b28f6e37ceea848de06389d669182a012a9ca1ac5a95a"; \
