@@ -18,6 +18,11 @@ ln -s ${ORACLE_BASE}/libclntsh.so.21.1 /usr/lib/libclntsh.so; \
 ln -s ${ORACLE_BASE}/libocci.so.21.1 /usr/lib/libocci.so; \
 ln -s ${ORACLE_BASE}/libociicus.so /usr/lib/libociicus.so; \
 ln -s ${ORACLE_BASE}/libnnz21.so /usr/lib/libnnz21.so; \
+if [ ! -f /usr/glibc-compat/lib/libresolv.so.2 ]; then \
+  echo "GLIBC not detected on system"; \
+  exit 1;
+fi; \
+ln -s /usr/glibc-compat/lib/libresolv.so.2 /usr/lib/libresolv.so.2; \
 apk del --no-cache --no-network --purge \
     ca-certificates \
     curl \
