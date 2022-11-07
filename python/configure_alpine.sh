@@ -1,6 +1,8 @@
 set -ex; \
 apk add --no-cache \
     bash \
+    ca-certificates \
+    curl \
     tzdata; \
 cd /usr/src/app; \
 rm -rf \
