@@ -16,7 +16,7 @@ ENV LANG="C.UTF-8" \
 WORKDIR /usr/src/app
 
 # Install glibc
-ENV GLIBC_VERSION="2.35-r0"
+ENV GLIBC_VERSION="2.34-r0"
 COPY install_glibc_alpine.sh .
 RUN /bin/sh install_glibc_alpine.sh
 
