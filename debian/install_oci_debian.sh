@@ -16,6 +16,10 @@ mv instantclient_*/* ${ORACLE_BASE}/; \
 rm -rf instantclient_*; \
 echo "${ORACLE_BASE}" > /etc/ld.so.conf.d/oracle-instantclient.conf; \
 ldconfig; \
+ldd ${ORACLE_BASE}/libclntsh.so || exit 1; \
+ldd ${ORACLE_BASE}/libocci.so || exit 1; \
+ldd ${ORACLE_BASE}/libociicus.so || exit 1; \
+ldd ${ORACLE_BASE}/libnnz21.so || exit 1; \
 apt-get remove -y --purge \
     ca-certificates \
     curl \
