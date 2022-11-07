@@ -15,6 +15,16 @@ ENV LANG="C.UTF-8" \
 
 WORKDIR /usr/src/app
 
+# Install Node.js
+ENV NODE_VERSION="18.12.0"
+COPY install_nodejs_alpine.sh .
+RUN /bin/sh install_nodejs_alpine.sh
+
+# Install yarn
+ENV YARN_VERSION="1.22.19"
+COPY install_yarn_alpine.sh .
+RUN /bin/sh install_yarn_alpine.sh
+
 # Install glibc
 ENV GLIBC_VERSION="2.34-r0"
 COPY install_glibc_alpine.sh .
@@ -29,16 +39,6 @@ ENV INSTANT_CLIENT_VERSION="21.7.0" \
     PATH="/opt/oracle/instantclient:${PATH}"
 COPY install_oci_alpine.sh .
 RUN /bin/sh install_oci_alpine.sh
-
-# Install Node.js
-ENV NODE_VERSION="18.12.0"
-COPY install_nodejs_alpine.sh .
-RUN /bin/sh install_nodejs_alpine.sh
-
-# Install yarn
-ENV YARN_VERSION="1.22.19"
-COPY install_yarn_alpine.sh .
-RUN /bin/sh install_yarn_alpine.sh
 
 # Custom configuration for Alpine Linux
 COPY configure_alpine.sh .

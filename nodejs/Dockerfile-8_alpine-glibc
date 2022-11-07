@@ -15,11 +15,6 @@ ENV LANG="C.UTF-8" \
 
 WORKDIR /usr/src/app
 
-# Install glibc
-ENV GLIBC_VERSION="2.34-r0"
-COPY install_glibc_alpine.sh .
-RUN /bin/sh install_glibc_alpine.sh
-
 # Install Node.js
 ENV NODE_VERSION="8.17.0"
 COPY install_nodejs_alpine.sh .
@@ -29,6 +24,11 @@ RUN /bin/sh install_nodejs_alpine.sh
 ENV YARN_VERSION="1.21.1"
 COPY install_yarn_alpine.sh .
 RUN /bin/sh install_yarn_alpine.sh
+
+# Install glibc
+ENV GLIBC_VERSION="2.34-r0"
+COPY install_glibc_alpine.sh .
+RUN /bin/sh install_glibc_alpine.sh
 
 # Custom configuration for Alpine Linux
 COPY configure_alpine.sh .
