@@ -1,6 +1,8 @@
 set -ex; \
 apt-get install -y --no-install-recommends \
-        tzdata; \
+    ca-certificates \
+    curl \
+    tzdata; \
 apt-get autoclean -y; \
 apt-get clean -y; \
 cd /usr/src/app; \
