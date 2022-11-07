@@ -16,16 +16,6 @@ ENV LANG="C.UTF-8" \
 
 WORKDIR /usr/src/app
 
-# Install instantclient
-ENV INSTANT_CLIENT_VERSION="21.7.0" \
-    ORACLE_BASE="/opt/oracle/instantclient" \
-    ORACLE_HOME="/opt/oracle/instantclient" \
-    TNS_ADMIN="/opt/oracle/instantclient" \
-    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
-    PATH="/opt/oracle/instantclient:${PATH}"
-COPY install_oci_debian.sh .
-RUN /bin/sh install_oci_debian.sh
-
 # Install Node.js
 ENV NODE_VERSION="10.24.1"
 COPY install_nodejs_debian.sh .
@@ -35,6 +25,16 @@ RUN /bin/sh install_nodejs_debian.sh
 ENV YARN_VERSION="1.22.5"
 COPY install_yarn_debian.sh .
 RUN /bin/sh install_yarn_debian.sh
+
+# Install instantclient
+ENV INSTANT_CLIENT_VERSION="21.7.0" \
+    ORACLE_BASE="/opt/oracle/instantclient" \
+    ORACLE_HOME="/opt/oracle/instantclient" \
+    TNS_ADMIN="/opt/oracle/instantclient" \
+    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
+    PATH="/opt/oracle/instantclient:${PATH}"
+COPY install_oci_debian.sh .
+RUN /bin/sh install_oci_debian.sh
 
 # Custom configuration for Debian
 COPY configure_debian.sh .
