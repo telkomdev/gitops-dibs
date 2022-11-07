@@ -17,6 +17,13 @@ ENV LANG="C.UTF-8" \
 
 WORKDIR /usr/src/app
 
+# Install golang
+ENV GOLANG_VERSION="1.17.13" \
+    GOPATH="/go" \
+    PATH=/go/bin:/usr/local/go/bin:${PATH}
+COPY install_golang_alpine.sh .
+RUN /bin/sh install_golang_alpine.sh
+
 # Install glibc
 ENV GLIBC_VERSION="2.34-r0"
 COPY install_glibc_alpine.sh .
@@ -29,13 +36,6 @@ RUN /bin/sh install_wkhtmltopdf_alpine.sh
 COPY --from=builder /bin/wkhtmltopdf /bin/wkhtmltopdf
 COPY --from=builder /bin/wkhtmltoimage /bin/wkhtmltoimage
 COPY --from=builder /lib/libwkhtmltox* /bin/
-
-# Install golang
-ENV GOLANG_VERSION="1.17.13" \
-    GOPATH="/go" \
-    PATH=/go/bin:/usr/local/go/bin:${PATH}
-COPY install_golang_alpine.sh .
-RUN /bin/sh install_golang_alpine.sh
 
 # Custom configuration for Alpine Linux
 COPY configure_alpine.sh .
