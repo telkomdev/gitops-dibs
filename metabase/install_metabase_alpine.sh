@@ -38,12 +38,13 @@ curl https://cacerts.digicert.com/DigiCertGlobalRootG2.crt.pem -o /app/certs/Dig
 mkdir -p "${METABASE_HOME}/data/plugins"; \
 chmod a+rwx "${METABASE_HOME}/data/plugins"; \
 METABASE_URL="https://downloads.metabase.com/v${METABASE_VERSION}/metabase.jar"; \
-case $(echo ${GOLANG_VERSION} | awk -F[\.] '{print $1"."$2}') in \
+case $(echo ${METABASE_VERSION} | awk -F[\.] '{print $1"."$2}') in \
   '0.45') \
-    sha256='98e470861e60056190d27fb619a6e39d37f341e235d5acbc045a882da0a71603'; \
+    sha256='61b620a0957c12de30d4a3897857d2e8cb547eb63f2bffd15bebb055a92fc1ec'; \
     ;; \
 esac; \
-wget -qo "${METABASE_HOME}/metabase.jar" "${METABASE_URL}"; \
-echo "${sha256} ${METABASE_HOME}/metabase.jar" | sha256sum -c -; \
+wget -qO "${METABASE_HOME}/metabase.jar" "${METABASE_URL}"; \
+cd ${METABASE_HOME}; \
+echo "${sha256}  metabase.jar" | sha256sum -c - || exit 1; \
 rm -f install_metabase_alpine.sh
 
