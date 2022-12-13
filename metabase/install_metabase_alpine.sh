@@ -29,7 +29,6 @@ rm -rf ~/.java; \
 echo java --version; \
 java --version || exit 1; \
 apk add -U bash ttf-dejavu fontconfig curl java-cacerts; \
-apk upgrade; \
 rm -rf /var/cache/apk/*; \
 mkdir -p /app/certs; \
 curl https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem -o /app/certs/rds-combined-ca-bundle.pem; \
