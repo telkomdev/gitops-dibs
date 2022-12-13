@@ -29,6 +29,7 @@ rm -rf ~/.java; \
 echo java --version; \
 java --version || exit 1; \
 apk add -U bash ttf-dejavu fontconfig curl java-cacerts; \
+apk upgrade; \
 rm -rf /var/cache/apk/*; \
 mkdir -p /app/certs; \
 curl https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem -o /app/certs/rds-combined-ca-bundle.pem; \
@@ -40,7 +41,7 @@ chmod a+rwx "${METABASE_HOME}/data/plugins"; \
 METABASE_URL="https://downloads.metabase.com/v${METABASE_VERSION}/metabase.jar"; \
 case $(echo ${METABASE_VERSION} | awk -F[\.] '{print $1"."$2}') in \
   '0.45') \
-    sha256='61b620a0957c12de30d4a3897857d2e8cb547eb63f2bffd15bebb055a92fc1ec'; \
+    sha256='15f5fff922095a7492a937f4c87d3108359b05d5dbcd54a840448708ee68438b'; \
     ;; \
 esac; \
 wget -qO "${METABASE_HOME}/metabase.jar" "${METABASE_URL}"; \
