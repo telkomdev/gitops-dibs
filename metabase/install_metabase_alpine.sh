@@ -37,7 +37,11 @@ curl https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem -o /app/c
 curl https://cacerts.digicert.com/DigiCertGlobalRootG2.crt.pem -o /app/certs/DigiCertGlobalRootG2.crt.pem; \
 /opt/java/openjdk/bin/keytool -noprompt -import -trustcacerts -alias azure-cert -file /app/certs/DigiCertGlobalRootG2.crt.pem -keystore /etc/ssl/certs/java/cacerts -keypass changeit -storepass changeit; \
 mkdir -p "${METABASE_HOME}/data/plugins"; \
+mkdir -p "${METABASE_HOME}/data/dbs"; \
+chmod 777 "${METABASE_HOME}"; \
 chmod a+rwx "${METABASE_HOME}/data/plugins"; \
+chmod a+rwx "${METABASE_HOME}/data/dbs"; \
+ln -s ${METABASE_HOME}/data/plugins/ ${METABASE_HOME}/; \
 METABASE_URL="https://downloads.metabase.com/v${METABASE_VERSION}/metabase.jar"; \
 case $(echo ${METABASE_VERSION} | awk -F[\.] '{print $1"."$2}') in \
   '0.45') \
