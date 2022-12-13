@@ -45,7 +45,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image_name }}:${{ inputs.image_version }}-${{ inputs.image_variant }}
   build_metabase_alpine_glibc:
     if: ${{ inputs.image_variant == 'all' }}
-    name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-alpine"
+    name: "Build and push to registry ${{ inputs.image_name }}:${{ inputs.image_version }}-alpine-glibc"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
