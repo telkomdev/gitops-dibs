@@ -35,10 +35,11 @@ esac; \
 echo "${sha256_glibc_base}  ${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" | sha256sum -c - || exit 1; \
 echo "${sha256_glibc_bin}  ${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" | sha256sum -c - || exit 1; \
 echo "${sha256_glibc_i18n}  ${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}" | sha256sum -c - || exit 1; \
-apk add --no-cache \
+apk add --no-cache --force-overwrite \
     "${ALPINE_GLIBC_BASE_PACKAGE_FILENAME}" \
     "${ALPINE_GLIBC_BIN_PACKAGE_FILENAME}" \
     "${ALPINE_GLIBC_I18N_PACKAGE_FILENAME}"; \
+apk fix --force-overwrite alpine-baselayout-data; \
 rm -f "/etc/apk/keys/sgerrand.rsa.pub"; \
 (/usr/glibc-compat/bin/localedef --force --inputfile POSIX --charmap UTF-8 "${LANG}" || true); \
 echo "export LANG=${LANG}" > /etc/profile.d/locale.sh; \
