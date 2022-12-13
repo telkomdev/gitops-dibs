@@ -43,5 +43,5 @@ EXPOSE 3000
 
 ENTRYPOINT ["/usr/local/docker/bin/entrypoint"]
 
-CMD ["/bin/sh", "-c", "java", "-server", "-jar" "/opt/metabase/metabase.jar"]
+CMD ["java", "-server", "-jar", "/opt/metabase/metabase.jar"]
 
