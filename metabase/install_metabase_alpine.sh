@@ -36,6 +36,12 @@ curl https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem -o /app/c
 /opt/java/openjdk/bin/keytool -noprompt -import -trustcacerts -alias aws-rds -file /app/certs/rds-combined-ca-bundle.pem -keystore /etc/ssl/certs/java/cacerts -keypass changeit -storepass changeit; \
 curl https://cacerts.digicert.com/DigiCertGlobalRootG2.crt.pem -o /app/certs/DigiCertGlobalRootG2.crt.pem; \
 /opt/java/openjdk/bin/keytool -noprompt -import -trustcacerts -alias azure-cert -file /app/certs/DigiCertGlobalRootG2.crt.pem -keystore /etc/ssl/certs/java/cacerts -keypass changeit -storepass changeit; \
+echo "Add custom id to user User ..."; \
+if [ "$(id -u)" != "0" ]; then \
+  sed "s/^user:\(.*\):[0-9]\+:\([0-9]\+\):.*:\(.*:.*\)/user:\1:$(id -u):\2:User:\3/g" < /etc/passwd > /tmp/passwd || exit 1; \
+  cat /tmp/passwd > /etc/passwd; \
+  rm -f /tmp/passwd; \
+fi; \
 mkdir -p "${METABASE_HOME}/data/plugins"; \
 mkdir -p "${METABASE_HOME}/data/dbs"; \
 chmod 777 "${METABASE_HOME}"; \

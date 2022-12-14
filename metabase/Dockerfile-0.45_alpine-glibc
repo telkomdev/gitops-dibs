@@ -24,6 +24,7 @@ RUN /bin/sh install_glibc_alpine.sh
 # Install metabase
 ENV METABASE_VERSION="0.45.1" \
     METABASE_HOME="/opt/metabase" \
+    MB_PLUGINS_DIR="/opt/metabase/data/plugins" \
     JAVA_VERSION="jdk-11.0.17+8" \
     JAVA_HOME="/opt/java/openjdk" \
     JAVA_OPTS="-Dlog4j2.formatMsgNoLookups=true" \
