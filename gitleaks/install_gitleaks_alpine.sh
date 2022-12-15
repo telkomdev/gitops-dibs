@@ -1,5 +1,5 @@
 set -ex; \
-adduser -D gitleaks; \
+adduser -u 1001 -D gitleaks; \
 apk add --no-cache \
     curl \
     ca-certificates \
