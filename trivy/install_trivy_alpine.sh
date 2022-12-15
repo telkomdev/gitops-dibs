@@ -14,6 +14,9 @@ case "${alpineArch##*-}" in \
       '0.34') \
         CHECKSUM="53f176ca461412563cec7199798ad9acf8bbb38527c0d9a38f745442f022f111"; \
         ;; \
+      '0.35') \
+        CHECKSUM="ebc1dd4d4c0594028d6a501dfc1a73d56add20b29d3dee5ab6e64aac94b1d526"; \
+        ;; \
       esac; \
     ;; \
   *) \

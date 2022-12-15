@@ -9,9 +9,10 @@ on:
       image_version:
         description: Docker image version
         required: true
-        default: 0.34
+        default: 0.35
         type: choice
         options:
+          - 0.35
           - 0.34
           - 0.31
       image_variant:
