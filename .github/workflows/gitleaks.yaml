@@ -9,9 +9,10 @@ on:
       image_version:
         description: Docker image version
         required: true
-        default: 8.11
+        default: 8.15
         type: choice
         options:
+          - 8.15
           - 8.11
       image_variant:
         description: Docker image variant
