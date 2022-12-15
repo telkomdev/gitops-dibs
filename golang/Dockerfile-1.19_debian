@@ -17,7 +17,7 @@ ENV LANG="C.UTF-8" \
 WORKDIR /usr/src/app
 
 # Install golang
-ENV GOLANG_VERSION="1.19.3" \
+ENV GOLANG_VERSION="1.19.4" \
     GOPATH="/go" \
     PATH=/go/bin:/usr/local/go/bin:${PATH}
 COPY install_golang_debian.sh .
