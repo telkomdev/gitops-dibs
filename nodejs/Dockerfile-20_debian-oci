@@ -1,0 +1,46 @@
+FROM debian:11-slim
+
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Debian (11) OCI Node.js 20" \
+      io.k8s.display-name="Debian (11) OCI Node.js 20" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="runner,builder,debian,nodejs,oracle" \
+      summary="Virtual Machine (VM) like container platform OCI with Node.js 20" \
+      vendor="Debian" \
+      release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta" \
+    DEBIAN_FRONTEND="noninteractive"
+
+WORKDIR /usr/src/app
+
+# Install Node.js
+ENV NODE_VERSION="20.18.1"
+COPY install_nodejs_debian.sh .
+RUN /bin/sh install_nodejs_debian.sh
+
+# Install yarn
+ENV YARN_VERSION="1.22.19"
+COPY install_yarn_debian.sh .
+RUN /bin/sh install_yarn_debian.sh
+
+# Install instantclient
+ENV INSTANT_CLIENT_VERSION="21.7.0" \
+    ORACLE_BASE="/opt/oracle/instantclient" \
+    ORACLE_HOME="/opt/oracle/instantclient" \
+    TNS_ADMIN="/opt/oracle/instantclient" \
+    LD_LIBRARY_PATH="/opt/oracle/instantclient:${LD_LIBRARY_PATH}" \
+    PATH="/opt/oracle/instantclient:${PATH}"
+COPY install_oci_debian.sh .
+RUN /bin/sh install_oci_debian.sh
+
+# Custom configuration for Debian
+COPY configure_debian.sh .
+RUN /bin/sh configure_debian.sh
+
+COPY docker-entrypoint.sh /usr/local/bin
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+
