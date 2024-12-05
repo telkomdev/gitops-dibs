@@ -12,6 +12,7 @@ on:
         default: 18
         type: choice
         options:
+          - 20
           - 18
           - 16
           - 14
