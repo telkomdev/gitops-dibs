@@ -1,0 +1,35 @@
+FROM alpine:3.16
+
+LABEL org.opencontainers.image.authors="EWZ Engineering <engineering@mytens.co.id>" \
+      io.k8s.description="Alpine (3.16) Node.js 20" \
+      io.k8s.display-name="Alpine (3.16) Node.js 20" \
+      io.openshift.non-scalable="false" \
+      io.openshift.tags="runner,builder,alpine,nodejs" \
+      summary="Virtual Machine (VM) like container platform with Node.js 20" \
+      vendor="Alpine" \
+      release="1"
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8" \
+    TZ="Asia/Jakarta"
+
+WORKDIR /usr/src/app
+
+# Install Node.js
+ENV NODE_VERSION="20.18.1"
+COPY install_nodejs_alpine.sh .
+RUN /bin/sh install_nodejs_alpine.sh
+
+# Install yarn
+ENV YARN_VERSION="1.22.19"
+COPY install_yarn_alpine.sh .
+RUN /bin/sh install_yarn_alpine.sh
+
+# Custom configuration for Alpine Linux
+COPY configure_alpine.sh .
+RUN /bin/sh configure_alpine.sh
+
+COPY docker-entrypoint.sh /usr/local/bin
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+
